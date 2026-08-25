@@ -1,0 +1,12 @@
+{
+  "profile": {"name":"Vo Thanh Sang","brand":"Senior Enterprise Infrastructure | Cloud | Security Engineer","contact":"vothanhsang2007@gmail.com"},
+  "privacy": {"public_safe":true,"exclude":["internal IP addresses","hostnames","tenant IDs","credentials","confidential business metrics","proprietary architecture details"]},
+  "roles": [
+    {"company":"Yes4All","title":"Senior Infrastructure Engineer | IT Services","period":"2025-08–Present"},
+    {"company":"Tan Hiep Phat Group","title":"Senior Infrastructure Engineer / Network Security Lead","period":"2023-03–2025-08"},
+    {"company":"Golden Lotus Securities Corporation","title":"IT Infrastructure Team Leader","period":"2021-12–2023-03"},
+    {"company":"Post and Telecommunication Finance Co.","title":"IT South Team Leader - HCM Office","period":"2019-04–2021-06"},
+    {"company":"Olam Vietnam Co., Ltd.","title":"IT System Administrator","period":"2009-07–2019-01"},
+    {"company":"VNPRO","title":"Technical Staff","period":"2008-07–2008-11"}
+  ]
+}
