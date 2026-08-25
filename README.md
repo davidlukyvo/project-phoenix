@@ -2,33 +2,34 @@
 
 Public professional portfolio for Vo Thanh Sang.
 
-## Publishing model
-- Static HTML/CSS
-- GitHub repository as source of truth
-- Cloudflare Pages for hosting
-- Later: custom domain
+## Architecture
+- `public/` — the only directory published to the web
+- `public/blog/` — engineering notes
+- `public/assets/` — CSS, favicon and social assets
+- `public/data/career.json` — public-safe career data
+- `wrangler.jsonc` — Cloudflare Workers Static Assets configuration
+
+## Deployment
+GitHub is the source of truth. Cloudflare Workers Builds runs `npx wrangler deploy`; Wrangler publishes only `./public`.
+
+Current development URL: `project-phoenix.davidlukyvo.workers.dev`
 
 ## Privacy guardrail
 Never publish:
-- internal IP addresses / hostnames
+- internal IP addresses or hostnames
 - credentials, tokens, tenant IDs or app secrets
 - confidential company metrics
 - proprietary diagrams/configurations
-- personal or customer data
+- personal, employee or customer data
 
-## Daily article workflow
-A new article should:
+## Article workflow
+Every article must:
 1. be grounded in a confirmed career/project theme,
 2. generalize company-specific implementation details,
 3. emphasize engineering reasoning and lessons learned,
-4. avoid claims that cannot be verified,
-5. update `blog/index.html` and the Latest Writing section on `index.html`.
+4. avoid unsupported claims,
+5. pass the privacy guardrail before publication,
+6. update the writing index, homepage Latest Writing section and sitemap.
 
-## Cloudflare Pages
-Once the GitHub repository is public:
-1. Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git.
-2. Select the repository.
-3. Framework preset: None.
-4. Build command: leave blank.
-5. Build output directory: `/`.
-6. Deploy.
+## Future custom domain
+When a custom domain is added, update the canonical URL, Open Graph URL, `robots.txt` and `sitemap.xml` from the workers.dev hostname to the final domain.
