@@ -10,8 +10,7 @@
   <style>
     .article>p:not(.subtitle),.article .article-signoff p{text-align:justify;text-justify:inter-word}
     .consulting-note{margin:28px 0;padding:20px 22px;border-left:4px solid #2f6db5;background:#f4f8fd;border-radius:0 12px 12px 0}
-    .migration-path{margin:30px 0;padding:24px;border:1px solid #dfe5ec;border-radius:16px;background:#f8fafc}
-    .migration-path ol{margin:0;padding-left:22px}.migration-path li{margin:9px 0}
+    .reconciliation-note{margin:28px 0;padding:22px 24px;border:1px solid #cfdcf1;border-left:5px solid #173f8a;background:#f7faff;border-radius:0 14px 14px 0}
     .risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:28px 0}
     .risk-grid>div{padding:20px;border:1px solid #dfe5ec;border-radius:14px;background:#f8fafc}.risk-grid h3{margin-top:0}
     .article figure.article-figure,.article figure.article-figure.diagram{width:min(920px,100%)!important;max-width:920px!important;margin:32px auto 38px!important;transform:none!important}
@@ -31,7 +30,7 @@
   <p>Nhưng khi nhìn vào toàn bộ project, mình thấy phần khó hơn lại nằm ở những thứ không thể đo chỉ bằng số mailbox hay số file đã copy.</p>
   <p>Định danh người dùng có khớp không? Quyền truy cập có đi theo dữ liệu không? Trong thời gian pilot, mail flow giữa hai nền tảng sẽ vận hành thế nào? Một Shared Drive nên trở thành SharePoint Site, OneDrive của owner hay một mô hình khác? Và sau cutover, điều gì được xem là migration hoàn tất?</p>
 
-  <div class="consulting-note"><strong>Vai trò của mình trong project này là Consultant cho team triển khai.</strong> Mình không trực tiếp thực hiện toàn bộ các bước implementation. Phần mình tập trung nhiều hơn là review phương án, đặt câu hỏi về dependency và risk, theo dõi logic pilot/cutover, cùng team nhìn lại exception và tiêu chí vận hành sau migration.</div>
+  <div class="consulting-note"><strong>Trong project này mình tham gia ở vai trò Consultant cho team triển khai.</strong> Phần mình tập trung nhiều nhất là review phương án, dependency và risk, theo dõi logic pilot/cutover, cùng team nhìn lại exception và xác định tiêu chí vận hành sau migration.</div>
 
   <h2>Điểm bắt đầu không phải là công cụ migration</h2>
   <p>Tài liệu triển khai có sử dụng các công cụ migration để chuyển email, calendar và dữ liệu giữa hai hệ sinh thái. Nhưng nếu bắt đầu cuộc thảo luận từ công cụ, rất dễ bỏ qua câu hỏi quan trọng hơn: <strong>identity nào sẽ sở hữu dữ liệu sau khi sang Microsoft 365?</strong></p>
@@ -44,18 +43,9 @@
   </figure>
 
   <h2>Migration tốt thường bắt đầu bằng Survey và Identity Normalization</h2>
-  <p>Một điểm mình thấy hợp lý trong cách project được tổ chức là thứ tự triển khai. Thay vì migrate đại trà ngay từ đầu, luồng công việc đi qua khảo sát hệ thống hiện hữu, chuẩn hóa identity, pilot, coexistence, batch migration rồi mới đến cutover.</p>
-  <div class="migration-path"><ol>
-    <li><strong>Survey</strong> — hiểu AD, Google Workspace, Microsoft 365, mailbox, Drive, Shared Drive và các exception.</li>
-    <li><strong>Identity normalization</strong> — đồng bộ AD lên Entra ID, xử lý mapping và kiểm tra sign-in.</li>
-    <li><strong>Pilot</strong> — chọn nhóm đại diện để kiểm tra Gmail, Calendar, Drive, Outlook và endpoint protection.</li>
-    <li><strong>Coexistence</strong> — giữ mail flow có kiểm soát trong lúc hai nền tảng cùng tồn tại.</li>
-    <li><strong>Batch migration</strong> — chia nhỏ email và dữ liệu thay vì dồn toàn bộ vào một lần chuyển.</li>
-    <li><strong>Shared Drive mapping</strong> — quyết định destination theo owner, mục đích sử dụng và quyền truy cập.</li>
-    <li><strong>Cutover</strong> — chuyển mail flow chính sang Exchange Online và hoàn thiện DNS liên quan.</li>
-    <li><strong>Post-migration reconciliation</strong> — rà lại permission, mailbox, data exception, endpoint và user support.</li>
-  </ol></div>
-  <p>Điều mình thích ở sequence này là mỗi giai đoạn tạo ra evidence cho giai đoạn sau. Pilot không phải một bản demo nhỏ cho đẹp; nó là nơi để tìm ra những giả định sai trước khi chúng trở thành lỗi diện rộng.</p>
+  <p>Một điểm mình thấy hợp lý trong cách project được tổ chức là thứ tự triển khai. Thay vì migrate đại trà ngay từ đầu, luồng công việc đi từ khảo sát hệ thống hiện hữu và chuẩn hóa identity sang pilot, coexistence, batch migration, Shared Drive mapping rồi mới đến cutover và hậu kiểm.</p>
+  <p>Điều đáng giá ở sequence này không nằm ở việc có nhiều stage, mà ở chỗ mỗi stage tạo ra evidence cho stage tiếp theo. Survey giúp lộ dependency; identity normalization giảm lỗi mapping; pilot kiểm chứng những giả định ban đầu; coexistence giúp giới hạn blast radius; batch migration làm thay đổi dễ kiểm soát hơn; còn reconciliation tạo một safety net sau Go-live.</p>
+  <p>Pilot vì vậy không phải một bản demo nhỏ cho đẹp. Nó là nơi để tìm ra những giả định sai trước khi chúng trở thành lỗi diện rộng.</p>
 
   <figure class="article-figure">
     <img src="/assets/blog/Migration%20Roadmap%20to%20Microsoft%20365.png?v=20260827" alt="Lộ trình migration tổng thể từ Survey, Identity, Pilot, Coexistence, Batch Migration đến Cutover và Project Closure cùng 30 ngày đối chiếu sau Go-live">
@@ -75,6 +65,7 @@
   <h2>Shared Drive không nên được xem như một folder lớn</h2>
   <p>Một trong những phần thú vị nhất của migration data là Shared Drive.</p>
   <p>Google Shared Drive không tự nhiên tương đương với một destination duy nhất bên Microsoft. Tùy owner, mục đích sử dụng và permission model, destination có thể là SharePoint Site, OneDrive của owner hoặc một mô hình shared khác.</p>
+  <p>Trong case này, với dữ liệu mang tính <strong>team-owned</strong> và dùng cho collaboration, SharePoint là destination chính. OneDrive phù hợp hơn với dữ liệu mang tính cá nhân hoặc owner-specific; vì vậy mapping destination cần dựa trên ownership và cách dữ liệu được sử dụng, không chỉ dựa trên dung lượng hay cấu trúc thư mục.</p>
   <p>Vì vậy trước khi migrate, câu hỏi không chỉ là “Drive này có bao nhiêu GB?”, mà còn là:</p>
   <p><strong>Ai sở hữu dữ liệu? Ai cần quyền sau migration? Đây là personal storage hay team collaboration space? Nếu owner thay đổi thì quyền truy cập có còn hợp lý không?</strong></p>
   <p>Ở góc độ Consultant, mình thấy đây là nơi architecture và governance gặp nhau. Nếu mapping sai, file có thể được copy đầy đủ nhưng trải nghiệm vận hành sau migration vẫn sai.</p>
@@ -97,7 +88,7 @@
   <p>Vì số lượng người dùng trong đợt migration khá lớn, phần communication với business được chuẩn bị từ sớm. Trước Go-live, kế hoạch cutover, cách đăng nhập, cách sử dụng Microsoft 365 và kênh hỗ trợ được thông báo để người dùng biết chính xác thời điểm thay đổi sẽ xảy ra.</p>
   <p>Sau khi Go-live, người dùng chuyển sang Microsoft 365 làm nền tảng làm việc chính và được dành <strong>30 ngày để tự kiểm tra, đối chiếu mail, calendar, file và quyền truy cập</strong>. Đây không phải một khoảng chờ thụ động; nó là một reconciliation window được chủ động thiết kế vào project.</p>
   <p>Nếu trong 30 ngày đó có người dùng báo thiếu file hoặc sai permission, team vẫn còn khả năng quay lại Google Workspace để truy vết theo tên file, đường dẫn, owner hoặc context mà người dùng cung cấp, rồi lấy lại dữ liệu theo từng case cụ thể.</p>
-  <p>Cách làm này giúp mình thấy rõ một điều: với migration có lượng dữ liệu và user lớn, không nhất thiết phải giả định rằng mọi exception đều có thể được phát hiện trước Go-live. Quan trọng hơn là <strong>tạo ra một khoảng thời gian đủ rõ để user xác nhận dữ liệu và team còn giữ được source cũ để xử lý case-by-case.</strong></p>
+  <div class="reconciliation-note"><strong>Điểm mình xem là quan trọng nhất trong cách làm này:</strong> Go-live không đồng nghĩa source cũ phải biến mất ngay lập tức. Khi migration có lượng user và dữ liệu lớn, một khoảng đối chiếu 30 ngày giúp người dùng xác nhận dữ liệu bằng chính workflow thực tế của họ, trong khi team vẫn giữ được khả năng truy hồi Google Workspace để xử lý exception case-by-case.</div>
 
   <figure class="article-figure">
     <img src="/assets/blog/Cutover%20to%20Microsoft%20365%20Roadmap.png?v=20260827" alt="Cutover Microsoft 365, 30 ngày post-migration reconciliation, project closure và handover">
