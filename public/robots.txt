@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://project-phoenix.davidlukyvo.workers.dev/sitemap.xml
+Sitemap: https://sangvo.me/sitemap.xml
