@@ -8,9 +8,12 @@
   <meta property="og:title" content="Dự án & Case Study | Vo Thanh Sang">
   <meta property="og:description" content="Các case study tiêu biểu về Infrastructure Architecture, Network Security, Observability, Cloud, Identity, Migration và Resilience.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sangvo.me/projects/">
+  <link rel="canonical" href="https://sangvo.me/projects/">
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../assets/style.css">
   <style>
+    .brand a{display:inline-flex;align-items:center;gap:8px;color:inherit;text-decoration:none}.brand img{width:28px;height:28px;display:block}.brand span{letter-spacing:.08em}
     .projects-hero{padding:72px 0 48px;background:linear-gradient(180deg,#fff 0%,#f5f7fb 100%)}
     .projects-hero h1{font-size:clamp(2.7rem,6vw,4.8rem);max-width:900px}
     .projects-intro{max-width:900px;color:#39465e;font-size:1.16rem;text-align:justify;text-justify:inter-word}
@@ -40,11 +43,11 @@
     .closing-panel h2{margin-top:0}
     .closing-panel p{max-width:900px;text-align:justify;text-justify:inter-word}
     @media(max-width:900px){.featured-grid,.project-list{grid-template-columns:1fr}.capability-strip{grid-template-columns:repeat(2,1fr)}.category-head{display:block}.category-head p{text-align:left;margin-top:7px}.case-thumb{height:auto;min-height:220px}.case-thumb img{height:auto;max-height:330px}}
-    @media(max-width:560px){.capability-strip{grid-template-columns:1fr}.projects-hero{padding-top:52px}.case-body{padding:19px}.case-thumb{min-height:0;padding:7px}.case-thumb img{max-height:none}}
+    @media(max-width:560px){.capability-strip{grid-template-columns:1fr}.projects-hero{padding-top:52px}.case-body{padding:19px}.case-thumb{min-height:0;padding:7px}.case-thumb img{max-height:none}.brand img{width:26px;height:26px}}
   </style>
 </head>
 <body>
-<nav><div class="wrap"><div class="brand"><a href="../index.html">PROJECT PHOENIX</a></div><div class="links"><a href="../index.html">Trang chủ</a><a href="../blog/index.html">Blog</a></div></div></nav>
+<nav><div class="wrap"><div class="brand"><a href="../index.html"><img src="../assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="../index.html#about">About</a><a href="../projects/index.html">Case Studies</a><a href="../blog/index.html">Engineering Notes</a><a href="../index.html#career">Career Journey</a></div></div></nav>
 <header class="projects-hero"><div class="wrap"><div class="kicker">Các dự án Engineering tiêu biểu</div><h1>Dự án & Case Study</h1><p class="projects-intro">Một portfolio được chọn lọc từ các quyết định kiến trúc, migration, cải tiến vận hành và những bài học thực tế trong Enterprise Infrastructure, Network Security, Observability, Cloud, Identity và Resilience.</p><div class="portfolio-note">Các case study này tập trung vào <strong>cách quyết định được đưa ra</strong>, chứ không chỉ liệt kê công nghệ đã triển khai. Phiên bản public chủ động lược bỏ IP nội bộ, credential, tenant identifier, số liệu thương mại nhạy cảm và các chi tiết triển khai không phù hợp để công khai.</div></div></header>
 <main>
 <section><div class="wrap"><div class="kicker">Case Study nổi bật</div><h2 class="section-title">Những quyết định Engineering đặt trong bối cảnh vận hành thực tế</h2><div class="featured-grid">
