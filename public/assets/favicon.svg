@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="SV lifecycle monogram">
   <rect width="128" height="128" rx="26" fill="#0D1B2A"/>
 
-  <!-- Four-segment lifecycle ring -->
-  <path d="M18 60 A46 46 0 0 1 60 18" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="butt"/>
-  <path d="M68 18 A46 46 0 0 1 110 60" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="butt"/>
-  <path d="M110 68 A46 46 0 0 1 68 110" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="butt"/>
-  <path d="M60 110 A46 46 0 0 1 18 68" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="butt"/>
+  <!-- Lifecycle ring: four clean flat segments -->
+  <path d="M18 59 A46 46 0 0 1 59 18" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="butt"/>
+  <path d="M69 18 A46 46 0 0 1 110 59" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="butt"/>
+  <path d="M110 69 A46 46 0 0 1 69 110" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="butt"/>
+  <path d="M59 110 A46 46 0 0 1 18 69" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="butt"/>
 
-  <!-- Solid geometric S -->
-  <path d="M82 33H49L36 46V57L47 68H68L76 76V84L69 91H39L32 99H72L86 85V72L73 59H52L44 52V49L51 42H76Z" fill="#FFFFFF"/>
+  <!-- Geometric S: compact, angular and fully readable -->
+  <path d="M41 34H84L77 44H50L43 51V57L50 64H69L81 76V87L70 98H37L44 88H66L73 81V79L68 74H47L34 61V47Z" fill="#FFFFFF"/>
 
-  <!-- Angular V with separation at the overlap -->
-  <path d="M62 67H75L84 88L101 59H115L89 105H79Z" fill="#2563EB" stroke="#0D1B2A" stroke-width="3" stroke-linejoin="miter"/>
+  <!-- Angular V: lower placement keeps the SV legible at favicon size -->
+  <path d="M64 68H77L85 88L101 60H114L90 104H80Z" fill="#2563EB"/>
 </svg>
