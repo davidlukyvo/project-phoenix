@@ -70,10 +70,8 @@
   <p>Đây là một trong những bài học mình giữ lại khá rõ từ project này: <strong>technical feasibility không phải là tiêu chí duy nhất để chọn architecture.</strong></p>
 
   <h2>Ba lựa chọn, ba cách trả lời khác nhau cho cùng một nhu cầu</h2>
-  <p>Trong quá trình assessment, bài toán không chỉ còn là “mua server nào”. Các lựa chọn được đặt cạnh nhau theo hướng purchase, lease-to-buy và dedicated infrastructure/service.</p>
-  <p>Mỗi lựa chọn giải quyết một nhóm vấn đề khác nhau.</p>
-  <p>Purchase cho ownership rõ ràng nhưng đẩy CapEx lên sớm. Lease-to-buy giúp trải chi phí theo thời gian nhưng vẫn hướng tới ownership. Dedicated/colocation có thể giảm gánh nặng một số lớp facility và vận hành vật lý, nhưng đổi lại tạo recurring cost dài hạn và thêm dependency với external provider/network.</p>
-  <p>Nếu chỉ nhìn vào thông số CPU, RAM và storage thì các phương án có thể khá giống nhau. Nhưng khi thêm các biến số về rack, power, cooling, network, DIA, support, remote hands, recurring fee, vận hành và khả năng tái sử dụng hạ tầng hiện có, bức tranh bắt đầu khác.</p>
+  <p>Trong quá trình assessment, các lựa chọn được đặt cạnh nhau theo hướng purchase, lease-to-buy và dedicated infrastructure/service. Purchase cho ownership rõ ràng nhưng đưa CapEx lên sớm; lease-to-buy trải chi phí theo thời gian; còn dedicated/colocation giảm một phần gánh nặng facility nhưng tạo recurring cost và dependency với external provider/network.</p>
+  <p>Khi thêm rack, power, cooling, DIA, support, remote hands, recurring fee và khả năng tái sử dụng hạ tầng hiện có vào bài toán CPU/RAM/storage, bức tranh TCO bắt đầu khác đáng kể.</p>
 
   <div class="lesson">Một architecture tốt không nhất thiết là architecture “enterprise” nhất. Nó phải là architecture phù hợp nhất với constraint thực tế của business.</div>
 
@@ -179,26 +177,15 @@
   <p>Một architecture đẹp trên diagram chưa mang nhiều giá trị nếu platform sau đó khó support, khó provision và chỉ một vài người biết cách phục hồi.</p>
 
   <h2>Điều đáng nhớ nhất không phải là việc Data Center đã không được chọn</h2>
-  <p>Nếu chỉ nhìn vào kết quả cuối, rất dễ kể project này thành một câu chuyện ngắn:</p>
-  <p>“Ban đầu định move lên Data Center, sau đó để tiết kiệm chi phí nên chuyển về server room nội bộ.”</p>
-  <p>Nhưng cách kể đó bỏ mất phần quan trọng nhất.</p>
   <p>External DC không phải một phương án sai. Nó giải quyết tốt một số vấn đề về facility, physical security, power, cooling và support. Nhưng khi đặt cạnh workload profile, hardware investment, recurring cost, network dependency và operating model thực tế, một phương án khác tạo ra balance phù hợp hơn ở thời điểm đó.</p>
-  <p>Quyết định có giá trị không nằm ở việc chọn “DC” hay “on-prem”.</p>
-  <p>Nó nằm ở việc team đã đủ dữ liệu để biết tại sao mình chọn.</p>
+  <p>Quyết định có giá trị không nằm ở việc chọn “DC” hay “on-prem”, mà nằm ở việc team có đủ dữ liệu để biết tại sao mình chọn.</p>
 
   <div class="evidence-note"><strong>Một architecture decision tốt không cần chứng minh phương án còn lại là tệ.</strong> Nó chỉ cần chứng minh phương án được chọn phù hợp hơn với requirement, risk và economics của hệ thống tại thời điểm ra quyết định.</div>
 
   <h2>Nhìn lại project</h2>
-  <p>Project này đi qua nhiều lớp hơn mình hình dung lúc bắt đầu: workload inventory, capacity assessment, external DC design, commercial option, TCO review, physical move, network redesign, Proxmox/PBS consolidation, backup/restore, power readiness, cutover và operationalization.</p>
-  <p>Nhưng bài học mình giữ lại không nằm ở tên server, model switch hay số lượng VM cuối cùng.</p>
-  <p>Nó nằm ở cách câu hỏi thay đổi trong suốt project.</p>
-  <p>Ban đầu là:</p>
-  <p><strong>“Hạ tầng cần bao nhiêu CPU, RAM và storage?”</strong></p>
-  <p>Sau đó là:</p>
-  <p><strong>“Architecture nào có thể đáp ứng capacity và availability?”</strong></p>
-  <p>Rồi cuối cùng là:</p>
-  <p><strong>“Architecture nào đáp ứng được những requirement đó với operational model và TCO hợp lý nhất?”</strong></p>
-  <p>Với mình, đây mới là khoảng cách giữa infrastructure implementation và infrastructure engineering.</p>
+  <p>Project đi từ workload inventory và capacity assessment đến external DC design, TCO review, rồi chuyển thành physical migration, network redesign, Proxmox/PBS consolidation, backup/restore, power readiness, cutover và operationalization.</p>
+  <p>Điều mình giữ lại không phải tên server, model switch hay số lượng VM, mà là cách câu hỏi thay đổi: từ <strong>“Hạ tầng cần bao nhiêu CPU, RAM và storage?”</strong>, sang <strong>“Architecture nào đáp ứng capacity và availability?”</strong>, và cuối cùng là <strong>“Architecture nào đáp ứng những requirement đó với operational model và TCO hợp lý nhất?”</strong></p>
+  <p>Với mình, đó là khoảng cách giữa infrastructure implementation và infrastructure engineering.</p>
 
   <blockquote><strong>Architecture không chỉ là nơi workload sẽ chạy. Architecture là quyết định về cách hệ thống sẽ được vận hành, phục hồi và trả chi phí trong nhiều năm sau đó.</strong></blockquote>
 
