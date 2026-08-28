@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/sitemap/0.9">
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/</loc><lastmod>2026-08-28</lastmod><priority>1.0</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/</loc><lastmod>2026-08-28</lastmod><priority>0.8</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-28-dc-proposal-to-infrastructure-consolidation.html</loc><lastmod>2026-08-28</lastmod><priority>0.8</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2025-q4-google-workspace-to-m365.html</loc><lastmod>2026-08-27</lastmod><priority>0.8</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-26-firewall-migration-ha-green-is-not-enough.html</loc><lastmod>2026-08-27</lastmod><priority>0.8</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-26-migration-does-not-start-at-cutover.html</loc><lastmod>2026-08-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-26-engineering-journey-2023-2026.html</loc><lastmod>2026-08-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-26-dmvpn-multisite.html</loc><lastmod>2026-08-26</lastmod><priority>0.8</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-26-high-availability-beyond-second-node.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-26-still-running-why-replace.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-25-when-monitoring-lies.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-25-building-a-practical-enterprise-noc.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-25-least-privilege-bastion-access.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
-  <url><loc>https://project-phoenix.davidlukyvo.workers.dev/blog/posts/2026-08-25-resilience-beyond-uptime.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
+  <url><loc>https://sangvo.me/</loc><lastmod>2026-08-28</lastmod><priority>1.0</priority></url>
+  <url><loc>https://sangvo.me/blog/</loc><lastmod>2026-08-28</lastmod><priority>0.8</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-28-dc-proposal-to-infrastructure-consolidation.html</loc><lastmod>2026-08-28</lastmod><priority>0.8</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2025-q4-google-workspace-to-m365.html</loc><lastmod>2026-08-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-26-firewall-migration-ha-green-is-not-enough.html</loc><lastmod>2026-08-27</lastmod><priority>0.8</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-26-migration-does-not-start-at-cutover.html</loc><lastmod>2026-08-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026.html</loc><lastmod>2026-08-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-26-dmvpn-multisite.html</loc><lastmod>2026-08-26</lastmod><priority>0.8</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-26-high-availability-beyond-second-node.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-26-still-running-why-replace.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-25-when-monitoring-lies.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-25-building-a-practical-enterprise-noc.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-25-least-privilege-bastion-access.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
+  <url><loc>https://sangvo.me/blog/posts/2026-08-25-resilience-beyond-uptime.html</loc><lastmod>2026-08-26</lastmod><priority>0.7</priority></url>
 </urlset>
