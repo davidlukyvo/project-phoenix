@@ -7,9 +7,11 @@
   <path d="M110 69 A46 46 0 0 1 69 110" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="butt"/>
   <path d="M59 110 A46 46 0 0 1 18 69" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="butt"/>
 
-  <!-- Geometric S: optically centered and balanced -->
-  <path d="M43 34H86L78 44H52L44 52V57L51 64H68L80 76V84L70 94H40L47 84H65L72 78V76L66 70H48L36 58V47Z" fill="#FFFFFF"/>
+  <!-- Simplified S: thinner, cleaner and immediately readable -->
+  <path d="M83 40H52C44 40 39 45 39 52C39 59 44 64 52 64H68C76 64 81 69 81 76C81 83 76 88 68 88H43"
+        fill="none" stroke="#FFFFFF" stroke-width="10"
+        stroke-linecap="square" stroke-linejoin="round"/>
 
-  <!-- Angular V: fully contained inside the ring, no overlap with ring segments -->
+  <!-- Angular V: retained almost unchanged -->
   <path d="M61 68H74L83 87L96 65H104L89 99H79Z" fill="#2563EB"/>
 </svg>
