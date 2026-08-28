@@ -1,16 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="SV lifecycle monogram">
   <rect width="128" height="128" rx="26" fill="#0D1B2A"/>
 
-  <!-- Lifecycle ring: resilience, recovery, validation, continuous improvement -->
-  <path d="M17 60 A47 47 0 0 1 60 17" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="butt"/>
-  <path d="M68 17 A47 47 0 0 1 111 60" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="butt"/>
-  <path d="M111 68 A47 47 0 0 1 68 111" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="butt"/>
-  <path d="M60 111 A47 47 0 0 1 17 68" fill="none" stroke="#2563EB" stroke-width="6" stroke-linecap="butt"/>
+  <!-- Four-segment lifecycle ring -->
+  <path d="M18 60 A46 46 0 0 1 60 18" fill="none" stroke="#FFFFFF" stroke-width="6"/>
+  <path d="M68 18 A46 46 0 0 1 110 60" fill="none" stroke="#2563EB" stroke-width="6"/>
+  <path d="M110 68 A46 46 0 0 1 68 110" fill="none" stroke="#FFFFFF" stroke-width="6"/>
+  <path d="M60 110 A46 46 0 0 1 18 68" fill="none" stroke="#2563EB" stroke-width="6"/>
 
-  <!-- Geometric S -->
-  <path d="M40 33H89L81 44H50L43 50V57L50 63H69L82 76V89L74 98L65 87L71 81V79L66 74H45L32 61V47L40 39Z" fill="#FFFFFF"/>
-  <path d="M33 84H58L66 95H25Z" fill="#FFFFFF"/>
+  <!-- Geometric S: one continuous technical stroke -->
+  <path d="M84 37 H48 L38 47 V56 L47 65 H67 L78 76 V86 L68 96 H37"
+        fill="none" stroke="#FFFFFF" stroke-width="12"
+        stroke-linecap="square" stroke-linejoin="miter"/>
 
-  <!-- Angular V: validation, verification, visibility -->
-  <path d="M59 65H73L84 90L101 60H115L89 106H79Z" fill="#2563EB"/>
+  <!-- Angular V: validation / verification / visibility -->
+  <path d="M63 67 L84 101 L108 60"
+        fill="none" stroke="#2563EB" stroke-width="13"
+        stroke-linecap="square" stroke-linejoin="miter"/>
 </svg>
