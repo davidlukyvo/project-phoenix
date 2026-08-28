@@ -1,10 +1,16 @@
-// deploy-refresh: 2026-08-27T09:44+07:00
+// production-domain: sangvo.me
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "project-phoenix",
   "compatibility_date": "2026-08-20",
-  "workers_dev": true,
+  "workers_dev": false,
   "preview_urls": true,
+  "routes": [
+    {
+      "pattern": "sangvo.me",
+      "custom_domain": true
+    }
+  ],
   "observability": { "enabled": true },
   "assets": {
     "directory": "./public",
