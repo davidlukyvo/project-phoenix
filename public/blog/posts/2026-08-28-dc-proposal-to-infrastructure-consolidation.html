@@ -19,6 +19,11 @@
     .phase-strip>div{padding:18px 16px;border:1px solid #dbe3ed;border-radius:13px;background:#fff}
     .phase-strip strong{display:block;color:#173f8a;margin-bottom:7px}
     .lesson{font-size:1.06rem;font-weight:700;color:#102847;margin:28px 0;padding:18px 20px;border-top:1px solid #d9e1eb;border-bottom:1px solid #d9e1eb}
+    .decision-table-wrap{overflow-x:auto;margin:28px 0 34px;border:1px solid #dfe5ec;border-radius:14px;background:#fff}
+    .decision-table{width:100%;border-collapse:collapse;min-width:700px;font-size:.94rem}
+    .decision-table th,.decision-table td{padding:13px 15px;text-align:left;vertical-align:top;border-bottom:1px solid #e5eaf0}
+    .decision-table th{background:#f5f8fc;color:#173f8a;font-weight:700}
+    .decision-table tr:last-child td{border-bottom:0;font-weight:700}
     .article figure.article-figure{width:min(980px,100%)!important;max-width:980px!important;margin:34px auto 42px!important;transform:none!important}
     .article figure.article-figure img{display:block;width:100%!important;max-width:100%!important;height:auto;margin:0 auto;border-radius:12px;box-shadow:0 10px 28px rgba(24,48,86,.08);cursor:zoom-in}
     .article figure.article-figure figcaption{text-align:center;color:#66788a;font-size:.9rem;line-height:1.55;margin:10px auto 0;max-width:900px}
@@ -85,6 +90,34 @@
 
   <div class="decision-note"><strong>Architecture changed. The engineering work did not disappear — it was redirected.</strong></div>
 
+  <h2>Architecture Decision Matrix: nhìn trade-off thay vì tìm một phương án “thắng tuyệt đối”</h2>
+  <p>Để nhìn quyết định này rõ hơn, mình thường tách các tiêu chí thành những trade-off có thể so sánh. Bảng dưới đây cố ý dùng đánh giá định tính thay vì công bố số liệu thương mại nội bộ. Nó không phải một scoring model tuyệt đối; mục đích là cho thấy vì sao hai architecture có thể cùng technically viable nhưng lại tạo ra operating model rất khác nhau.</p>
+
+  <div class="decision-table-wrap">
+    <table class="decision-table">
+      <thead><tr><th>Decision criteria</th><th>External Data Center</th><th>Internal Consolidation</th></tr></thead>
+      <tbody>
+        <tr><td>Upfront infrastructure investment</td><td>Medium</td><td>Higher</td></tr>
+        <tr><td>Recurring facility / service cost</td><td>Higher</td><td>Lower</td></tr>
+        <tr><td>Dedicated connectivity dependency</td><td>Higher</td><td>Lower</td></tr>
+        <tr><td>Facility resilience</td><td>Strong by design</td><td>Requires internal engineering</td></tr>
+        <tr><td>Physical security</td><td>Strong</td><td>Site-dependent</td></tr>
+        <tr><td>Operational control</td><td>Shared / provider-dependent</td><td>High</td></tr>
+        <tr><td>Existing hardware reuse</td><td>Moderate</td><td>High</td></tr>
+        <tr><td>Internal power &amp; cooling responsibility</td><td>Lower</td><td>Higher</td></tr>
+        <tr><td>Long-term flexibility</td><td>Medium</td><td>High</td></tr>
+        <tr><td>Overall fit for this project</td><td>Technically viable</td><td>Selected architecture</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Điểm mình muốn giữ ở đây là: <strong>phương án không được chọn không đồng nghĩa với phương án kém.</strong> External DC mạnh hơn ở facility resilience và giảm bớt một số trách nhiệm vật lý; internal consolidation lại cho quyền kiểm soát cao hơn, tận dụng tốt hơn phần investment đã có và giảm một số recurring dependency.</p>
+
+  <h2>TCO không chỉ là giá mua server</h2>
+  <p>Mình không đưa contract value hay chi phí vendor thực tế lên một bài public. Nhưng về mặt decision-making, TCO được nhìn rộng hơn rất nhiều so với hardware acquisition.</p>
+  <p>Các cost driver cần đặt cùng nhau gồm <strong>CapEx cho infrastructure, recurring facility/service fee, DIA/connectivity, power &amp; cooling, support/remote hands, vận hành và khả năng tái sử dụng asset hiện hữu</strong>. Một architecture có initial cost thấp hơn chưa chắc có lifecycle cost thấp hơn; ngược lại, một phương án cần đầu tư facility nội bộ nhiều hơn có thể giảm recurring external cost trong operating horizon dài hơn.</p>
+  <div class="evidence-note"><strong>Public-safe TCO framing:</strong> thay vì công bố số tiền hoặc tạo một con số 3-year/5-year không có đủ context, mình dùng cost drivers và relative trade-off. Điều quan trọng của case này là quyết định cuối cùng đã tính cả recurring economics và operating responsibility, không chỉ so cấu hình server.</div>
+
   <figure class="article-figure">
     <img src="/assets/blog/Decision%20Journey%20From%20Proposal%20to%20Consolidation.png?v=20260828" alt="Decision journey từ current state, assessment, external data center option đến TCO review và quyết định internal consolidation">
     <figcaption>Từ workload assessment đến architecture decision: external Data Center là một phương án khả thi, nhưng quyết định cuối cùng được cân bằng thêm bởi TCO, risk, khả năng vận hành và giá trị mang lại cho business.</figcaption>
@@ -125,6 +158,15 @@
   <p>Điều mình quan tâm không phải chỉ là trạng thái “Backup: Successful”. Những câu hỏi quan trọng hơn là:</p>
   <p><strong>Restore ở đâu? Restore mất bao lâu? Storage target đã sẵn sàng chưa? Network mapping sau restore là gì? Và service nào phải được kiểm tra trước khi nói VM đã phục hồi?</strong></p>
   <p>Đó cũng là lý do restore validation và operational recovery nên được xem như một phần của architecture, không phải một việc làm thêm của backup team.</p>
+
+  <h2>Recovery objective: đừng tạo một con số đẹp nếu project không định nghĩa nó</h2>
+  <p>RTO/RPO là những chỉ số hữu ích, nhưng chỉ có ý nghĩa khi chúng thực sự được định nghĩa, gắn với workload và được kiểm chứng. Trong bộ evidence của project này, mình không có cơ sở đủ chắc để công bố một formal target kiểu “RTO = X giờ” hay “RPO = Y phút”, nên mình không tạo ra các con số đó chỉ để bài trông định lượng hơn.</p>
+  <p>Thay vào đó, migration được thiết kế theo <strong>recoverability</strong>: giảm data exposure bằng incremental/final synchronization trước cutover, giữ PBS như một recovery path độc lập, xác nhận storage/network target và chỉ xem recovery hoàn tất sau khi service-level validation đạt yêu cầu.</p>
+  <div class="compare-grid">
+    <div><h3>RPO exposure</h3><p>Được giảm bằng incremental delta và final synchronization trước khi workload được cutover.</p></div>
+    <div><h3>Recovery path</h3><p>PBS backup/restore, target storage/network readiness và service validation tạo thành đường phục hồi có kiểm soát.</p></div>
+  </div>
+  <p>Nếu sau này một workload có formal RTO/RPO, chính restore testing mới là nơi chứng minh objective đó khả thi. Với project này, điều có thể khẳng định chắc hơn là: <strong>backup success không được dùng thay cho recovery evidence.</strong></p>
 
   <h2>Power readiness cũng là một dependency của Infrastructure</h2>
   <p>Khi target chuyển về internal server room, một phần công việc không còn nằm thuần trong network hay virtualization. Nguồn điện, phân tải, UPS và cooling cũng trở thành dependency trực tiếp của platform.</p>
