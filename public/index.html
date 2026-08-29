@@ -1,22 +1,147 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vo Thanh Sang | Engineering Notes on Enterprise Infrastructure</title><meta name="description" content="Engineering Notes và case study thực tế về Enterprise Infrastructure, Cloud, Security, Observability, Automation và Disaster Recovery của Vo Thanh Sang."><meta property="og:title" content="Vo Thanh Sang | Engineering Notes"><meta property="og:description" content="Những quyết định kỹ thuật, bài học vận hành và góc nhìn Engineering từ thực tế Enterprise Infrastructure."><meta property="og:type" content="website"><meta property="og:url" content="https://sangvo.me/"><meta property="og:image" content="https://sangvo.me/assets/og-card.svg"><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="canonical" href="https://sangvo.me/"><link rel="stylesheet" href="assets/style.css"><style>
-:root{--brand-navy:#0D1B2A;--brand-blue:#2563EB}
-.brand a{display:inline-flex;align-items:center;gap:8px;color:inherit;text-decoration:none}.brand img{width:28px;height:28px;display:block}.brand span{letter-spacing:.08em}
-.home-hero{padding:48px 0 38px;background:#fff;border-bottom:1px solid var(--line)}
-.hero-eyebrow{font-size:.82rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-blue);margin-bottom:14px}
-.home-hero h1{max-width:860px;margin:0;font-size:clamp(2.2rem,4.8vw,4.15rem);font-weight:800;line-height:1.05;letter-spacing:-.035em;color:#172033}
-.hero-identity{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:19px;color:#46536a}
-.hero-name{font-weight:800;color:#172033}.hero-role,.hero-tenure{padding-left:12px;border-left:1px solid #cfd6e0}.hero-tenure{font-size:.92rem;color:#7a8698}
-.hero-desc{max-width:720px;margin:15px 0 0;color:#46536a;font-size:1.03rem;line-height:1.7;text-align:left}
-.home-hero .actions{margin-top:22px}.home-hero .btn.primary{background:var(--brand-navy);border-color:var(--brand-navy)}.home-hero .btn.secondary{background:#fff;border-color:#9aa7b8;color:#172033}.home-hero .btn.contact{background:transparent;border-color:transparent;box-shadow:none;padding-left:10px;padding-right:10px}.home-hero .btn.contact:hover{color:var(--brand-blue);border-color:transparent}
-.featured-home{padding-top:36px;padding-bottom:42px;border-bottom:1px solid var(--line)}
-.featured-head{display:flex;justify-content:space-between;gap:22px;align-items:end;margin-bottom:18px}.featured-head h2{margin:0}.featured-head p{margin:0;max-width:620px;color:var(--muted);text-align:right}
-.featured-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:18px;align-items:stretch}
-.featured-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;min-height:245px;height:100%;box-shadow:none;transition:transform .18s ease,border-color .18s ease}
-.featured-card:hover{transform:translateY(-2px);border-color:var(--brand-blue)}
-.featured-card.primary-feature{border-top:3px solid var(--brand-navy);padding-top:20px}.featured-type{font-size:.78rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--brand-blue)}.featured-date{font-size:.82rem;color:#7a8698;margin-top:4px}.featured-card h3{font-size:1.2rem;line-height:1.38;margin:.72rem 0}.featured-card p{margin:.2rem 0;color:#46536a;line-height:1.65;text-align:justify;text-justify:inter-word}.featured-card a.read{margin-top:auto;padding-top:18px;font-weight:750}
-.quote-home{background:#f7f9fc;border-bottom:1px solid var(--line);padding:54px 0}.quote-home blockquote{max-width:900px;margin:0 auto;text-align:center;font-size:clamp(1.65rem,3vw,2.5rem);line-height:1.28;font-weight:750;letter-spacing:-.02em;color:#172033}
-#about p{max-width:980px;text-align:justify;text-justify:inter-word;line-height:1.8}#about p+p{margin-top:1.15rem}
-.principles{border-top:1px solid var(--line);padding-top:54px;padding-bottom:58px}.principles-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:22px}.principle{border:1px solid var(--line);border-radius:12px;padding:20px;background:#fff}.principle h3{margin:0;font-size:1.02rem;line-height:1.35;color:#172033}.principle p{margin:.55rem 0 0;color:#667085;line-height:1.6;font-size:.94rem}
-@media(max-width:900px){.featured-grid{grid-template-columns:1fr}.featured-head{display:block}.featured-head p{text-align:left;margin-top:8px}.hero-role,.hero-tenure{padding-left:0;border-left:0;width:100%}.principles-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.home-hero{padding:38px 0 32px}.featured-home{padding-top:30px}.home-hero h1{font-size:2.25rem}.brand img{width:26px;height:26px}.quote-home{padding:42px 0}.principles-grid{grid-template-columns:1fr}}
-</style></head><body><nav><div class="wrap"><div class="brand"><a href="index.html"><img src="assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="#about">About</a><a href="projects/index.html">Case Studies</a><a href="blog/index.html">Engineering Notes</a><a href="#career">Career Journey</a></div></div></nav><header class="home-hero"><div class="wrap"><div class="hero-eyebrow">Enterprise Infrastructure • Cloud • Security</div><h1>Ghi lại những quyết định kỹ thuật, bài học vận hành và góc nhìn Engineering từ thực tế.</h1><div class="hero-identity"><span class="hero-name">Vo Thanh Sang</span><span class="hero-role">Senior Infrastructure Engineer</span><span class="hero-tenure">15+ years in Enterprise Infrastructure</span></div><p class="hero-desc">Case study, Architecture Notes và Field Notes từ quá trình xây dựng, vận hành và cải tiến hệ thống Enterprise Infrastructure.</p><div class="actions"><a class="btn primary" href="blog/index.html">Đọc Engineering Notes</a><a class="btn secondary" href="projects/index.html">Xem Case Studies</a><a class="btn contact" href="mailto:vothanhsang2007@gmail.com">Liên hệ</a></div></div></header><main><section class="featured-home"><div class="wrap"><div class="featured-head"><div><div class="kicker">Featured Content</div><h2 class="section-title">Đọc từ nội dung kỹ thuật trước</h2></div><p>Case study, Architecture Note và Field Note được chọn lọc từ những bài toán vận hành thực tế.</p></div><div class="featured-grid"><article class="featured-card primary-feature"><div class="featured-type">Latest Post</div><div class="featured-date">28 Aug 2026</div><h3><a href="blog/posts/2026-08-28-dc-proposal-to-infrastructure-consolidation.html">Khi Data Center không còn là đáp án: từ DC Proposal đến Infrastructure Consolidation</a></h3><p>Capacity Planning, TCO, Proxmox/PBS, recovery path và cách một target architecture thay đổi trước khi đi vào production.</p><a class="read" href="blog/posts/2026-08-28-dc-proposal-to-infrastructure-consolidation.html">Đọc Engineering Note →</a></article><article class="featured-card"><div class="featured-type">Case Study</div><div class="featured-date">26 Aug 2026</div><h3><a href="blog/posts/2026-08-26-firewall-migration-ha-green-is-not-enough.html">Firewall Migration: khi HA Green vẫn chưa đủ</a></h3><p>Device health, stateful VPN flow, UAT, rollback và sự khác nhau giữa platform availability với service validation.</p><a class="read" href="projects/index.html">Xem Case Studies →</a></article><article class="featured-card"><div class="featured-type">Architecture Note</div><div class="featured-date">26 Aug 2026</div><h3><a href="blog/posts/2026-08-26-dmvpn-multisite.html">DMVPN trong môi trường Multi-site</a></h3><p>Dual WAN, DMVPN overlay, OSPF convergence và lý do tunnel-up chưa đủ để chứng minh application reachability.</p><a class="read" href="blog/posts/2026-08-26-dmvpn-multisite.html">Đọc Architecture Note →</a></article></div></div></section><section class="quote-home"><div class="wrap"><blockquote>“Infrastructure là thứ người dùng không nhìn thấy, cho đến khi nó thất bại.”</blockquote></div></section><section id="about"><div class="wrap"><div class="kicker">Góc nhìn nghề nghiệp</div><h2 class="section-title">Góc nhìn từ vận hành thực tế</h2><p>Mình làm việc trong lĩnh vực Enterprise Infrastructure, Cloud, Security và IT Operations. Đây là nơi mình ghi lại những bài học, quyết định kỹ thuật và góc nhìn Engineering được đúc kết từ quá trình thiết kế, vận hành và hiện đại hóa hạ tầng doanh nghiệp.</p><p>Phần lớn nội dung xoay quanh Architecture, Security, Observability, Automation và Disaster Recovery, được chia sẻ từ trải nghiệm thực tế thay vì góc nhìn lý thuyết. Mọi bài viết công khai đều đã được lược bỏ thông tin nội bộ, dữ liệu nhận dạng và những chi tiết triển khai mang tính nhạy cảm.</p></div></section><section id="projects"><div class="wrap"><div class="kicker">Một số mảng Engineering tiêu biểu</div><h2 class="section-title">Các chương trình và chủ đề mình tập trung</h2><div class="grid"><div class="card"><h3>Observability & NOC Modernization</h3><p>Centralized Monitoring và Operational Visibility cho Infrastructure, Network, Virtualization, Backup và Security telemetry.</p><div class="tags"><span class="tag">Zabbix</span><span class="tag">Grafana</span><span class="tag">Loki</span><span class="tag">Python APIs</span><span class="tag">Teams</span></div></div><div class="card"><h3>Security Platform Modernization</h3><p>Hiện đại hóa Enterprise Firewall, IPS, Endpoint/DLP và Secure Access với controlled cutover, HA design và rollback discipline.</p><div class="tags"><span class="tag">Palo Alto</span><span class="tag">Fortinet</span><span class="tag">Trellix DLP</span><span class="tag">Defender XDR</span></div></div><div class="card"><h3>Hybrid Cloud & Automation</h3><p>Xây dựng các pattern Infrastructure có thể lặp lại và mô hình delivery an toàn trên AWS cùng các nền tảng Microsoft Enterprise.</p><div class="tags"><span class="tag">AWS</span><span class="tag">Terraform</span><span class="tag">PowerShell</span><span class="tag">Python</span><span class="tag">Graph API</span></div></div><div class="card"><h3>Business Continuity & Recovery</h3><p>Restore Validation, Backup Governance, Operational Readiness và các thực hành Resilience dựa trên evidence, gắn với nhu cầu Business Continuity.</p><div class="tags"><span class="tag">Proxmox</span><span class="tag">PBS</span><span class="tag">DR</span><span class="tag">BCP</span></div></div><div class="card"><h3>Identity & Microsoft Governance</h3><p>Microsoft 365, Entra ID, Identity Lifecycle, Least Privilege và Secure Application Integration với Governance được đưa vào vận hành thực tế.</p><div class="tags"><span class="tag">Entra ID</span><span class="tag">M365</span><span class="tag">OIDC</span><span class="tag">Microsoft Graph</span></div></div><div class="card"><h3>ISO/IEC 27001:2022 Readiness</h3><p>Tham gia trực tiếp vào ISMS audit readiness, Backup/Restore Governance và ICT Readiness for Business Continuity.</p><div class="tags"><span class="tag">ISO 27001</span><span class="tag">Audit Evidence</span><span class="tag">Governance</span></div></div></div><div class="actions"><a class="btn primary" href="projects/index.html">Khám phá Case Studies</a></div></div></section><section id="career"><div class="wrap"><div class="kicker">Career Journey</div><h2 class="section-title">Hành trình phát triển nghề nghiệp</h2><div class="timeline"><div class="role"><h3>Yes4All — Senior Infrastructure Engineer | IT Services</h3><div class="meta">Aug 2025 – Present</div><p>Enterprise Infrastructure, Microsoft platforms, Security, Observability, Disaster Recovery, Automation và Governance.</p></div><div class="role"><h3>Tan Hiep Phat Group — Senior Infrastructure Engineer / Network Security Lead</h3><div class="meta">Mar 2023 – Aug 2025</div><p>Infrastructure transformation với AWS/Terraform, Cisco Enterprise Networking, Palo Alto, Fortinet, IPS, Peplink, Meraki và Trellix DLP Endpoint.</p></div><div class="role"><h3>Golden Lotus Securities — IT Infrastructure Team Leader</h3><div class="meta">Dec 2021 – Mar 2023</div><p>Infrastructure cho dịch vụ giao dịch chứng khoán, financial connectivity, vendor coordination và technical operations.</p></div><div class="role"><h3>Post and Telecommunication Finance Co. — IT South Team Leader</h3><div class="meta">Apr 2019 – Jun 2021</div><p>Infrastructure Operations tại HCM, Network/Security, Identity, Office platforms và Helpdesk Governance.</p></div><div class="role"><h3>Olam Vietnam — IT System Administrator</h3><div class="meta">Jul 2009 – Jan 2019</div><p>Multi-site Systems, Microsoft Infrastructure, Enterprise Networking, Virtualization, Backup, Security Controls và Business-System Support.</p></div><div class="role"><h3>VNPRO — Technical Staff</h3><div class="meta">Jul 2008 – Nov 2008</div><p>Kiểm thử thiết bị Cisco và hỗ trợ kỹ thuật cho khách hàng.</p></div></div></div></section><section class="principles"><div class="wrap"><div class="kicker">Engineering Principles</div><h2 class="section-title">Những nguyên tắc mình ưu tiên khi thiết kế và vận hành hệ thống</h2><div class="principles-grid"><article class="principle"><h3>Reliability over Complexity</h3><p>Ưu tiên kiến trúc dễ hiểu, dễ vận hành và đáng tin cậy hơn những giải pháp phức tạp không cần thiết.</p></article><article class="principle"><h3>Design for Recovery</h3><p>Recovery path, rollback và khả năng phục hồi cần được nghĩ đến ngay từ lúc thiết kế.</p></article><article class="principle"><h3>Automation before Repetition</h3><p>Những công việc lặp lại và có thể chuẩn hóa nên được tự động hóa để giảm sai sót vận hành.</p></article><article class="principle"><h3>Observability by Default</h3><p>Monitoring, logs và operational visibility nên là một phần của hệ thống ngay từ đầu, không phải bổ sung sau sự cố.</p></article></div></div></section></main><footer><div class="wrap"><a href="/blog/" style="color:inherit;text-decoration:none">© 2026 Vo Thanh Sang • All rights reserved.</a></div></footer></body></html>
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Vo Thanh Sang | Infrastructure Notes from Real Operations</title>
+  <meta name="description" content="Những ghi chép thực tế về Enterprise Infrastructure, Cloud, Security, Monitoring, Migration và Recovery của Vo Thanh Sang.">
+  <meta property="og:title" content="Vo Thanh Sang | Infrastructure Notes">
+  <meta property="og:description" content="Những quyết định kỹ thuật, bài học vận hành và góc nhìn từ thực tế làm Infrastructure.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sangvo.me/">
+  <meta property="og:image" content="https://sangvo.me/assets/og-card.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://sangvo.me/">
+  <link rel="stylesheet" href="assets/style.css">
+  <style>
+    :root{--brand-navy:#0D1B2A;--brand-blue:#2563EB}
+    .brand a{display:inline-flex;align-items:center;gap:8px;color:inherit;text-decoration:none}.brand img{width:28px;height:28px;display:block}.brand span{letter-spacing:.08em}
+    .home-hero{padding:48px 0 38px;background:#fff;border-bottom:1px solid var(--line)}
+    .hero-eyebrow{font-size:.82rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-blue);margin-bottom:14px}
+    .home-hero h1{max-width:860px;margin:0;font-size:clamp(2.2rem,4.8vw,4.15rem);font-weight:800;line-height:1.05;letter-spacing:-.035em;color:#172033}
+    .hero-identity{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:19px;color:#46536a}
+    .hero-name{font-weight:800;color:#172033}.hero-role,.hero-tenure{padding-left:12px;border-left:1px solid #cfd6e0}.hero-tenure{font-size:.92rem;color:#7a8698}
+    .hero-desc{max-width:720px;margin:15px 0 0;color:#46536a;font-size:1.03rem;line-height:1.7;text-align:left}
+    .home-hero .actions{margin-top:22px}.home-hero .btn.primary{background:var(--brand-navy);border-color:var(--brand-navy)}.home-hero .btn.secondary{background:#fff;border-color:#9aa7b8;color:#172033}.home-hero .btn.contact{background:transparent;border-color:transparent;box-shadow:none;padding-left:10px;padding-right:10px}.home-hero .btn.contact:hover{color:var(--brand-blue);border-color:transparent}
+    .featured-home{padding-top:36px;padding-bottom:42px;border-bottom:1px solid var(--line)}
+    .featured-head{display:flex;justify-content:space-between;gap:22px;align-items:end;margin-bottom:18px}.featured-head h2{margin:0}.featured-head p{margin:0;max-width:620px;color:var(--muted);text-align:right}
+    .featured-grid{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:18px;align-items:stretch}
+    .featured-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;min-height:245px;height:100%;box-shadow:none;transition:transform .18s ease,border-color .18s ease}
+    .featured-card:hover{transform:translateY(-2px);border-color:var(--brand-blue)}
+    .featured-card.primary-feature{border-top:3px solid var(--brand-navy);padding-top:20px}.featured-type{font-size:.78rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--brand-blue)}.featured-date{font-size:.82rem;color:#7a8698;margin-top:4px}.featured-card h3{font-size:1.2rem;line-height:1.38;margin:.72rem 0}.featured-card p{margin:.2rem 0;color:#46536a;line-height:1.65;text-align:justify;text-justify:inter-word}.featured-card a.read{margin-top:auto;padding-top:18px;font-weight:750}
+    #about p{max-width:980px;text-align:justify;text-justify:inter-word;line-height:1.8}#about p+p{margin-top:1.15rem}
+    .principles{border-top:1px solid var(--line);padding-top:54px;padding-bottom:58px}.principles-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:22px}.principle{border:1px solid var(--line);border-radius:12px;padding:20px;background:#fff}.principle h3{margin:0;font-size:1.02rem;line-height:1.35;color:#172033}.principle p{margin:.55rem 0 0;color:#667085;line-height:1.6;font-size:.94rem}
+    @media(max-width:900px){.featured-grid{grid-template-columns:1fr}.featured-head{display:block}.featured-head p{text-align:left;margin-top:8px}.hero-role,.hero-tenure{padding-left:0;border-left:0;width:100%}.principles-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:600px){.home-hero{padding:38px 0 32px}.featured-home{padding-top:30px}.home-hero h1{font-size:2.25rem}.brand img{width:26px;height:26px}.principles-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav>
+  <div class="wrap">
+    <div class="brand"><a href="index.html"><img src="assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div>
+    <div class="links"><a href="#about">About</a><a href="projects/index.html">Case Studies</a><a href="blog/index.html">Engineering Notes</a><a href="#career">Career Journey</a></div>
+  </div>
+</nav>
+
+<header class="home-hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">Enterprise Infrastructure • Cloud • Security</div>
+    <h1>Ghi lại những quyết định kỹ thuật, bài học vận hành và góc nhìn từ thực tế.</h1>
+    <div class="hero-identity">
+      <span class="hero-name">Vo Thanh Sang</span>
+      <span class="hero-role">Senior Infrastructure Engineer</span>
+      <span class="hero-tenure">15+ years in Enterprise Infrastructure</span>
+    </div>
+    <p class="hero-desc">Những ghi chép từ các project, những lần thay đổi hệ thống và công việc vận hành hằng ngày.</p>
+    <div class="actions"><a class="btn primary" href="blog/index.html">Đọc Engineering Notes</a><a class="btn secondary" href="projects/index.html">Xem Case Studies</a><a class="btn contact" href="mailto:vothanhsang2007@gmail.com">Liên hệ</a></div>
+  </div>
+</header>
+
+<main>
+<section class="featured-home">
+  <div class="wrap">
+    <div class="featured-head">
+      <div><div class="kicker">Gần đây</div><h2 class="section-title">Một vài bài viết gần đây</h2></div>
+      <p>Những câu chuyện mình thấy đáng ghi lại sau khi đi qua design, cutover, troubleshooting hoặc vận hành thực tế.</p>
+    </div>
+    <div class="featured-grid">
+      <article class="featured-card primary-feature">
+        <div class="featured-type">Latest Post</div><div class="featured-date">28 Aug 2026</div>
+        <h3><a href="blog/posts/2026-08-28-dc-proposal-to-infrastructure-consolidation.html">Khi Data Center không còn là đáp án: từ DC Proposal đến Infrastructure Consolidation</a></h3>
+        <p>Capacity Planning, TCO, Proxmox/PBS và lý do một phương án ban đầu có thể thay đổi khi nhìn kỹ hơn vào nhu cầu vận hành và recovery.</p>
+        <a class="read" href="blog/posts/2026-08-28-dc-proposal-to-infrastructure-consolidation.html">Đọc bài →</a>
+      </article>
+      <article class="featured-card">
+        <div class="featured-type">Case Study</div><div class="featured-date">26 Aug 2026</div>
+        <h3><a href="blog/posts/2026-08-26-firewall-migration-ha-green-is-not-enough.html">Firewall Migration: khi HA Green vẫn chưa đủ</a></h3>
+        <p>PA-3050 → PA-3410, GlobalProtect Pre-logon, UAT, rollback và khoảng cách giữa device healthy với service thực sự hoạt động.</p>
+        <a class="read" href="blog/posts/2026-08-26-firewall-migration-ha-green-is-not-enough.html">Đọc bài →</a>
+      </article>
+      <article class="featured-card">
+        <div class="featured-type">Architecture Note</div><div class="featured-date">26 Aug 2026</div>
+        <h3><a href="blog/posts/2026-08-26-dmvpn-multisite.html">DMVPN trong môi trường Multi-site</a></h3>
+        <p>Dual WAN, DMVPN, OSPF và lý do tunnel UP chưa đủ để kết luận application giữa các site đã thông.</p>
+        <a class="read" href="blog/posts/2026-08-26-dmvpn-multisite.html">Đọc bài →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="kicker">About</div>
+    <h2 class="section-title">Ghi chép từ công việc Infrastructure</h2>
+    <p>Mình làm Infrastructure đã nhiều năm, đi qua Network, Systems, Security, Cloud và IT Operations. Trong quãng thời gian đó có những project lớn, những thay đổi nhỏ, những lần cutover khá yên ắng và cả những tình huống chỉ khi vận hành thật mới thấy vấn đề.</p>
+    <p>Website này là nơi mình ghi lại những chuyện như vậy: vì sao một phương án được chọn, điều gì có thể hỏng, team kiểm tra bằng cách nào, khi nào nên rollback, và sau go-live còn phải nhìn thêm điều gì. Công nghệ thay đổi theo thời gian; những câu hỏi vận hành thì thường quay lại dưới những hình thức khác nhau.</p>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="kicker">Công việc thường gặp</div>
+    <h2 class="section-title">Một số chủ đề mình thường làm và thường viết</h2>
+    <div class="grid">
+      <div class="card"><h3>Monitoring & Observability</h3><p>Zabbix, Grafana, Loki, log tập trung, baseline và alert — với trọng tâm là nhìn ra vấn đề đủ sớm và giảm những cảnh báo không giúp ích cho vận hành.</p><div class="tags"><span class="tag">Zabbix</span><span class="tag">Grafana</span><span class="tag">Loki</span><span class="tag">Python APIs</span><span class="tag">Teams</span></div></div>
+      <div class="card"><h3>Network & Security</h3><p>Firewall, IPS, VPN, WAN, failover và migration. Phần mình quan tâm nhiều nhất thường nằm ở dependency, service validation và rollback hơn là chỉ nhìn trạng thái thiết bị.</p><div class="tags"><span class="tag">Palo Alto</span><span class="tag">Fortinet</span><span class="tag">Trellix</span><span class="tag">DMVPN</span></div></div>
+      <div class="card"><h3>Cloud & Automation</h3><p>AWS, Terraform, PowerShell, Python và Microsoft Graph cho những công việc có thể chuẩn hóa, lặp lại và kiểm soát được.</p><div class="tags"><span class="tag">AWS</span><span class="tag">Terraform</span><span class="tag">PowerShell</span><span class="tag">Python</span><span class="tag">Graph API</span></div></div>
+      <div class="card"><h3>Backup, DR & Recovery</h3><p>Backup job chỉ là điểm bắt đầu. Mình quan tâm nhiều hơn đến restore test, recovery path, dependency và việc có đủ bằng chứng để biết hệ thống thực sự phục hồi được hay không.</p><div class="tags"><span class="tag">Proxmox</span><span class="tag">PBS</span><span class="tag">DR</span><span class="tag">BCP</span></div></div>
+      <div class="card"><h3>Identity & Microsoft 365</h3><p>Entra ID, Microsoft 365, identity lifecycle, least privilege và các integration cần cân bằng giữa vận hành thuận tiện với quyền truy cập đủ chặt.</p><div class="tags"><span class="tag">Entra ID</span><span class="tag">M365</span><span class="tag">OIDC</span><span class="tag">Microsoft Graph</span></div></div>
+      <div class="card"><h3>ISO 27001 & ICT Readiness</h3><p>Backup/restore, audit evidence và ICT readiness cho business continuity — những phần rất dễ trở thành giấy tờ nếu không gắn lại với cách hệ thống thực sự được vận hành và kiểm tra.</p><div class="tags"><span class="tag">ISO 27001</span><span class="tag">Audit Evidence</span><span class="tag">ICT Readiness</span></div></div>
+    </div>
+    <div class="actions"><a class="btn primary" href="projects/index.html">Xem Case Studies</a></div>
+  </div>
+</section>
+
+<section id="career">
+  <div class="wrap">
+    <div class="kicker">Career Journey</div>
+    <h2 class="section-title">Quãng đường làm Infrastructure</h2>
+    <div class="timeline">
+      <div class="role"><h3>Yes4All — Senior Infrastructure Engineer | IT Services</h3><div class="meta">Aug 2025 – Present</div><p>Infrastructure, Microsoft platforms, Security, Monitoring, Backup/DR và Automation.</p></div>
+      <div class="role"><h3>Tan Hiep Phat Group — Senior Infrastructure Engineer / Network Security Lead</h3><div class="meta">Mar 2023 – Aug 2025</div><p>Network/Security projects với AWS/Terraform, Cisco, Palo Alto, Fortinet, IPS, Peplink, Meraki và Trellix DLP Endpoint.</p></div>
+      <div class="role"><h3>Golden Lotus Securities — IT Infrastructure Team Leader</h3><div class="meta">Dec 2021 – Mar 2023</div><p>Infrastructure cho môi trường chứng khoán, connectivity, vendor coordination và technical operations.</p></div>
+      <div class="role"><h3>Post and Telecommunication Finance Co. — IT South Team Leader</h3><div class="meta">Apr 2019 – Jun 2021</div><p>Infrastructure Operations tại HCM, Network/Security, Identity và Office platforms.</p></div>
+      <div class="role"><h3>Olam Vietnam — IT System Administrator</h3><div class="meta">Jul 2009 – Jan 2019</div><p>Multi-site systems, Microsoft Infrastructure, Enterprise Networking, Virtualization, Backup và Security.</p></div>
+      <div class="role"><h3>VNPRO — Technical Staff</h3><div class="meta">Jul 2008 – Nov 2008</div><p>Kiểm thử thiết bị Cisco và hỗ trợ kỹ thuật cho khách hàng.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="principles">
+  <div class="wrap">
+    <div class="kicker">Cách mình làm việc</div>
+    <h2 class="section-title">Một vài nguyên tắc mình thường quay lại</h2>
+    <div class="principles-grid">
+      <article class="principle"><h3>Dễ vận hành quan trọng hơn phức tạp</h3><p>Một thiết kế tốt cần để người vận hành hiểu được chuyện gì đang xảy ra và xử lý được khi có sự cố.</p></article>
+      <article class="principle"><h3>Nghĩ về recovery từ đầu</h3><p>Rollback, restore và recovery path nên được chuẩn bị khi mọi thứ còn bình thường, không phải sau khi service đã mất.</p></article>
+      <article class="principle"><h3>Việc lặp lại thì nên tự động hóa</h3><p>Automation có giá trị nhất khi nó giảm thao tác tay, giảm sai sót và vẫn để lại cách kiểm tra kết quả rõ ràng.</p></article>
+      <article class="principle"><h3>Trạng thái xanh chưa phải bằng chứng cuối cùng</h3><p>Dashboard, HA, tunnel hay backup job chỉ nói được một phần. Cuối cùng vẫn cần kiểm tra service và hành vi thực tế của hệ thống.</p></article>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap"><a href="/blog/" style="color:inherit;text-decoration:none">© 2026 Vo Thanh Sang • All rights reserved.</a></div></footer>
+</body>
+</html>
