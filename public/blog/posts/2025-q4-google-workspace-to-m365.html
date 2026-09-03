@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Google Workspace → Microsoft 365: Migration không chỉ là chuyển dữ liệu | Vo Thanh Sang</title>
-  <meta name="description" content="Góc nhìn Consultant về một Enterprise SaaS Migration từ Google Workspace sang Microsoft 365: Identity, Pilot, Coexistence, Batch Migration, Cutover và Post-migration Reconciliation.">
+  <meta name="description" content="Góc nhìn Consultant về migration từ Google Workspace sang Microsoft 365: Identity, Pilot, Coexistence, Batch Migration, Cutover và Post-migration Reconciliation.">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/assets/style.css">
   <style>
@@ -24,98 +24,98 @@
 <main><section><article class="article">
   <div class="kicker">Consulting Notes • Q4/2025</div>
   <h1>Google Workspace → Microsoft 365: Migration không chỉ là chuyển dữ liệu</h1>
-  <p class="subtitle">Từ Identity, Pilot và Coexistence đến Cutover và Post-migration Reconciliation — một góc nhìn Consultant về Enterprise SaaS Migration.</p>
+  <p class="subtitle">Một vài điều mình ghi lại khi tham gia review phương án migration: Identity, Pilot, Coexistence, Cutover và giai đoạn đối chiếu sau Go-live.</p>
 
   <p>Khi nói đến migration từ Google Workspace sang Microsoft 365, phản xạ đầu tiên thường là nghĩ đến email và file: Gmail chuyển sang Exchange Online, Google Drive chuyển sang OneDrive, Shared Drive chuyển sang SharePoint.</p>
-  <p>Nhưng khi nhìn vào toàn bộ project, mình thấy phần khó hơn lại nằm ở những thứ không thể đo chỉ bằng số mailbox hay số file đã copy.</p>
-  <p>Định danh người dùng có khớp không? Quyền truy cập có đi theo dữ liệu không? Trong thời gian pilot, mail flow giữa hai nền tảng sẽ vận hành thế nào? Một Shared Drive nên trở thành SharePoint Site, OneDrive của owner hay một mô hình khác? Và sau cutover, điều gì được xem là migration hoàn tất?</p>
+  <p>Nhưng khi nhìn toàn bộ project, phần khó hơn lại nằm ở những thứ không thể đo chỉ bằng số mailbox hay số file đã copy.</p>
+  <p>Identity có khớp không? Quyền truy cập đi theo dữ liệu thế nào? Trong thời gian pilot, mail flow giữa hai nền tảng sẽ chạy ra sao? Một Shared Drive nên trở thành SharePoint Site, OneDrive của owner hay một destination khác? Và sau cutover, đến lúc nào mới có thể nói migration đã xong?</p>
 
-  <div class="consulting-note"><strong>Trong project này mình tham gia ở vai trò Consultant cho team triển khai.</strong> Phần mình tập trung nhiều nhất là review phương án, dependency và risk, theo dõi logic pilot/cutover, cùng team nhìn lại exception và xác định tiêu chí vận hành sau migration.</div>
+  <div class="consulting-note"><strong>Trong project này mình tham gia ở vai trò Consultant cho team triển khai, không phải người trực tiếp thực hiện migration.</strong> Phần mình tập trung nhiều nhất là review phương án, dependency và risk, theo dõi logic pilot/cutover, cùng team nhìn lại exception và các tiêu chí cần kiểm tra sau migration.</div>
 
   <h2>Điểm bắt đầu không phải là công cụ migration</h2>
   <p>Tài liệu triển khai có sử dụng các công cụ migration để chuyển email, calendar và dữ liệu giữa hai hệ sinh thái. Nhưng nếu bắt đầu cuộc thảo luận từ công cụ, rất dễ bỏ qua câu hỏi quan trọng hơn: <strong>identity nào sẽ sở hữu dữ liệu sau khi sang Microsoft 365?</strong></p>
-  <p>Trong mô hình đích, Active Directory on-premises được kết nối với Microsoft Entra ID thông qua Entra ID Connect, sử dụng Password Hash Sync để hình thành một identity path thống nhất hơn giữa môi trường nội bộ và cloud.</p>
-  <p>Điều này làm cho migration không còn chỉ là bài toán “copy dữ liệu từ A sang B”. Trước khi dữ liệu đi, account đích phải tồn tại đúng, mapping phải rõ, và những trường hợp không khớp cần được nhận diện như exception thay vì xử lý ngẫu hứng trong maintenance window.</p>
+  <p>Trong mô hình đích, Active Directory on-premises được kết nối với Microsoft Entra ID thông qua Entra ID Connect và Password Hash Sync để account nội bộ và cloud đi theo một identity path rõ ràng hơn.</p>
+  <p>Trước khi data move, account đích phải tồn tại đúng, mapping phải rõ, và những trường hợp không khớp cần được nhận diện sớm thay vì để tới maintenance window mới xử lý.</p>
 
   <figure class="article-figure">
     <img src="/assets/blog/Google%20Workspace%20to%20Microsoft%20365%20Architecture.png?v=20260827" alt="Kiến trúc mục tiêu Google Workspace sang Microsoft 365 với Hybrid Identity, Entra ID Connect, Exchange Online, OneDrive, SharePoint, Teams và endpoint security">
-    <figcaption>Kiến trúc mục tiêu được nhìn từ Identity trước: Entra ID Connect là cầu nối giữa on-prem AD và Microsoft 365, còn Mail, Collaboration và Endpoint Security là các lớp dịch vụ đi theo sau.</figcaption>
+    <figcaption>Identity là một phần cần làm rõ trước khi email, file và các dịch vụ collaboration được chuyển sang platform mới.</figcaption>
   </figure>
 
-  <h2>Migration tốt thường bắt đầu bằng Survey và Identity Normalization</h2>
+  <h2>Survey và chuẩn hóa Identity nên đi trước rollout</h2>
   <p>Một điểm mình thấy hợp lý trong cách project được tổ chức là thứ tự triển khai. Thay vì migrate đại trà ngay từ đầu, luồng công việc đi từ khảo sát hệ thống hiện hữu và chuẩn hóa identity sang pilot, coexistence, batch migration, Shared Drive mapping rồi mới đến cutover và hậu kiểm.</p>
-  <p>Điều đáng giá ở sequence này không nằm ở việc có nhiều stage, mà ở chỗ mỗi stage tạo ra evidence cho stage tiếp theo. Survey giúp lộ dependency; identity normalization giảm lỗi mapping; pilot kiểm chứng những giả định ban đầu; coexistence giúp giới hạn blast radius; batch migration làm thay đổi dễ kiểm soát hơn; còn reconciliation tạo một safety net sau Go-live.</p>
-  <p>Pilot vì vậy không phải một bản demo nhỏ cho đẹp. Nó là nơi để tìm ra những giả định sai trước khi chúng trở thành lỗi diện rộng.</p>
+  <p>Mỗi bước giúp lộ ra một nhóm vấn đề khác nhau. Survey giúp thấy dependency; identity normalization giảm lỗi mapping; pilot kiểm tra các giả định ban đầu; coexistence giới hạn phạm vi ảnh hưởng; batch migration giúp dễ theo dõi hơn; còn reconciliation tạo thêm thời gian để tìm và xử lý exception sau Go-live.</p>
+  <p>Pilot vì vậy không phải một bản demo nhỏ. Nó là nơi để tìm những giả định sai trước khi chúng xuất hiện trên diện rộng.</p>
 
   <figure class="article-figure">
     <img src="/assets/blog/Migration%20Roadmap%20to%20Microsoft%20365.png?v=20260827" alt="Lộ trình migration tổng thể từ Survey, Identity, Pilot, Coexistence, Batch Migration đến Cutover và Project Closure cùng 30 ngày đối chiếu sau Go-live">
-    <figcaption>Migration được chia thành các giai đoạn có thể kiểm chứng. Song song với technical rollout là communication, training và một cửa sổ 30 ngày sau Go-live để người dùng đối chiếu dữ liệu.</figcaption>
+    <figcaption>Migration được chia thành nhiều giai đoạn để team có cơ hội kiểm tra và sửa trước khi chuyển toàn bộ người dùng.</figcaption>
   </figure>
 
   <h2>Pilot có giá trị khi nó tìm ra những thứ mình không dự đoán được</h2>
   <p>Trong pilot và migration thực tế, exception xuất hiện ở nhiều lớp khác nhau: một số email có MIME/header không hợp lệ, calendar event có thể bị duplicate sau nhiều lần migrate, file tạm hoặc định dạng không phù hợp bị skip, một số file Drive cần kiểm tra lại, Outlook có behavior khác sau khi đổi platform, và Defender có thể tạo tải cao trên endpoint có workload đặc thù.</p>
-  <p>Điều đáng chú ý là mỗi loại issue lại cần một cách xử lý khác nhau: có trường hợp phải re-migrate, có trường hợp cần rename hoặc exclude có kiểm soát, có trường hợp thuộc về Outlook/profile hay endpoint policy chứ không phải dữ liệu migration.</p>
-  <p>Không phải issue nào cũng là lý do để dừng project. Điều mình rút ra là: <strong>migration tool có thể thực thi mapping rất tốt, nhưng những exception chỉ xuất hiện khi dữ liệu, permission và user behavior thật bắt đầu đi qua platform mới.</strong></p>
-  <p>Google Workspace và Microsoft 365 có cách tổ chức dữ liệu, quyền và application behavior khác nhau. Vì vậy mục tiêu thực tế không nên là ép hai hệ sinh thái trở thành bản sao tuyệt đối của nhau, mà là xác định phần nào cần bảo toàn, phần nào cần mapping lại và phần nào phải chấp nhận remediation sau migration.</p>
+  <p>Mỗi loại issue lại cần một cách xử lý khác nhau: có trường hợp phải re-migrate, có trường hợp cần rename hoặc exclude có kiểm soát, có trường hợp thuộc về Outlook/profile hay endpoint policy chứ không phải dữ liệu migration.</p>
+  <p>Không phải issue nào cũng là lý do để dừng project. Điều đáng chú ý hơn là <strong>nhiều exception chỉ xuất hiện khi dữ liệu, permission và cách user làm việc thật bắt đầu đi qua platform mới.</strong></p>
+  <p>Google Workspace và Microsoft 365 không tổ chức dữ liệu, quyền và application behavior giống hệt nhau. Vì vậy có những thứ cần bảo toàn, có thứ cần mapping lại, và có thứ phải chấp nhận remediation sau migration.</p>
 
-  <h2>Coexistence giúp giảm rủi ro, nhưng làm dependency phức tạp hơn</h2>
+  <h2>Coexistence giảm phạm vi ảnh hưởng, nhưng tạo thêm trạng thái phải theo dõi</h2>
   <p>Trong giai đoạn pilot, MX vẫn còn ở Google và Google tiếp tục là luồng nhận mail chính, trong khi nhóm pilot đã bắt đầu làm việc trên Exchange Online. Mail cho pilot được đưa sang Microsoft 365 để kiểm thử, còn nhóm chưa pilot vẫn tiếp tục workflow trên Gmail.</p>
   <p>Cách này tránh một cutover “big bang” quá sớm, nhưng đồng thời tạo ra nhiều trạng thái cần kiểm soát: mail đang đi qua platform nào, user thuộc nhóm nào, routing nào là mong đợi và khi nào source of truth được chuyển hẳn sang Microsoft 365.</p>
-  <p>Đây là một pattern mình thấy xuất hiện ở nhiều migration: <strong>coexistence giảm blast radius của thay đổi, nhưng tăng số trạng thái mà hệ thống có thể tồn tại.</strong> Nếu routing, identity và support rule không rõ, cả hai platform có thể đều “đang chạy” nhưng team lại khó xác định behavior nào mới là đúng.</p>
+  <p>Nói đơn giản, coexistence làm thay đổi bớt nguy hiểm hơn nhưng troubleshoot có thể khó hơn. Nếu routing, identity và support rule không rõ, cả hai platform có thể đều “đang chạy” nhưng team lại không chắc behavior nào mới là đúng.</p>
 
   <h2>Những dependency nhỏ thường chỉ lộ ra khi platform bắt đầu chạy thật</h2>
   <p>Một SaaS migration nhìn trên sơ đồ thường xoay quanh identity, mailbox và data. Nhưng khi đi vào production, phạm vi thực tế rộng hơn. Scanner hoặc ứng dụng cũ có thể gửi mail theo cách tạo ra MIME không chuẩn; meeting room phải được recreate và kiểm thử booking; Outlook profile cần nhận đúng thay đổi sau cutover; endpoint security cũng phải được theo dõi vì workload của người dùng không giống nhau.</p>
   <p>Những dependency này không nhất thiết làm migration thất bại, nhưng chúng quyết định trải nghiệm sau Go-live. Một mailbox đã migrate thành công vẫn chưa đủ nếu ứng dụng nghiệp vụ không gửi được mail, user gặp profile warning hoặc endpoint bị ảnh hưởng bởi policy mới.</p>
-  <p>Đó cũng là lý do mình không nhìn project này như một bài toán Gmail → Exchange Online hay Drive → OneDrive. <strong>Thay platform collaboration đồng nghĩa thay đổi cả những integration và behavior đang dựa vào platform cũ.</strong></p>
+  <p>Đó là lý do mình không nhìn project này chỉ như Gmail → Exchange Online hay Drive → OneDrive. <strong>Thay collaboration platform cũng kéo theo những integration và thói quen vận hành đang phụ thuộc platform cũ.</strong></p>
 
   <h2>Shared Drive không nên được xem như một folder lớn</h2>
-  <p>Một trong những phần thú vị nhất của migration data là Shared Drive.</p>
-  <p>Google Shared Drive không tự nhiên tương đương với một destination duy nhất bên Microsoft. Inventory thực tế phải nhìn đồng thời owner, dung lượng, permission và mục đích sử dụng trước khi quyết định destination.</p>
-  <p>Với dữ liệu team collaboration, SharePoint Site là một destination tự nhiên; nhưng trong project vẫn có những trường hợp phù hợp hơn với OneDrive của owner hoặc một shared account theo mapping đã thống nhất. Vì vậy destination không nên được quyết định chỉ từ tên folder hay dung lượng.</p>
-  <p>Câu hỏi quan trọng hơn là: <strong>Ai sở hữu dữ liệu? Ai cần quyền sau migration? Đây là personal storage hay team collaboration space? Permission hiện tại có còn hợp lý khi chuyển sang mô hình Microsoft 365 không?</strong></p>
-  <p>Ở góc độ Consultant, mình thấy đây là nơi architecture và governance gặp nhau. File có thể được copy đầy đủ nhưng migration vẫn chưa tốt nếu ownership, permission hoặc collaboration model sau đó không phù hợp.</p>
+  <p>Một trong những phần mình thấy đáng chú ý là Shared Drive.</p>
+  <p>Google Shared Drive không tự nhiên tương đương với một destination duy nhất bên Microsoft. Inventory cần nhìn owner, dung lượng, permission và mục đích sử dụng trước khi quyết định destination.</p>
+  <p>Với dữ liệu team collaboration, SharePoint Site thường hợp lý; nhưng trong project vẫn có những trường hợp phù hợp hơn với OneDrive của owner hoặc một shared account theo mapping đã thống nhất. Vì vậy destination không nên được quyết định chỉ từ tên folder hay dung lượng.</p>
+  <p>Câu hỏi thực tế hơn là: <strong>Ai sở hữu dữ liệu? Ai cần quyền sau migration? Đây là personal storage hay team collaboration space? Permission hiện tại có còn phù hợp khi sang Microsoft 365 không?</strong></p>
+  <p>Ở góc độ review phương án, đây là chỗ mình thấy copy file đầy đủ vẫn chưa đủ nếu ownership và permission sau đó không đúng.</p>
 
   <figure class="article-figure">
     <img src="/assets/blog/Google%20Drive%20to%20SharePoint%20Migration%20Blueprint.png?v=20260827" alt="Mô hình ánh xạ và quản trị Google Shared Drive sang SharePoint Online gồm Site Collection, Document Libraries, Groups, Files và Permissions">
-    <figcaption>Shared Drive migration là bài toán mapping và governance: destination, metadata, permission, retention và khả năng tìm kiếm đều cần được quyết định trước khi data move.</figcaption>
+    <figcaption>Shared Drive migration cần làm rõ destination, permission và ownership trước khi data move.</figcaption>
   </figure>
 
   <h2>Không phải mọi thứ của Google đều có một bản sao 1:1 bên Microsoft</h2>
   <p>Một phần rất thực tế của migration là chấp nhận platform differences. File và email nghiệp vụ thông thường có thể được bảo toàn ở mức đáp ứng vận hành, nhưng một số thành phần như Google-specific metadata/labels, shortcut, share link, permission phức tạp hoặc version history có thể cần hậu kiểm hoặc không giữ nguyên behavior.</p>
   <p>Cũng có những workload không thuộc luồng migrate tự động 1:1, chẳng hạn Forms, Apps Script, custom workflow hoặc một số nội dung Google Sites. Nếu business còn nhu cầu, chúng phải được xem như một bài toán rebuild, export hoặc redesign riêng thay vì gắn nhãn chung là “migration failed”.</p>
-  <p>Việc phân loại trước <strong>business-critical data, acceptable platform limitation và post-migration remediation</strong> giúp cutover decision dựa trên risk thực tế thay vì kỳ vọng rằng hai ecosystem phải giống nhau tuyệt đối.</p>
+  <p>Việc phân loại trước dữ liệu nào bắt buộc phải giữ, limitation nào có thể chấp nhận và phần nào cần xử lý sau migration giúp cutover dựa trên risk thực tế hơn.</p>
 
   <h2>Cutover không phải là lúc mọi exception biến mất</h2>
-  <p>Cutover chuyển Microsoft 365 thành nền tảng vận hành chính, nhưng project không vì thế mà trở thành một hệ thống “không còn issue”. Sau chuyển đổi vẫn còn các trường hợp cần hậu kiểm: permission, group, mailbox, Drive/Shared Drive, Outlook và endpoint chưa hoàn tất trạng thái mong muốn.</p>
+  <p>Cutover chuyển Microsoft 365 thành nền tảng vận hành chính, nhưng sau đó vẫn còn các trường hợp cần hậu kiểm: permission, group, mailbox, Drive/Shared Drive, Outlook và endpoint chưa hoàn tất trạng thái mong muốn.</p>
   <div class="risk-grid">
     <div><h3>Cutover Success</h3><p>Mail flow chính hoạt động, identity truy cập được, dữ liệu nghiệp vụ quan trọng đã có destination và người dùng có thể tiếp tục làm việc.</p></div>
     <div><h3>Project Closure</h3><p>Exception đã được phân loại, owner rõ ràng, reconciliation hoàn tất ở mức chấp nhận được và team vận hành hiểu cách xử lý phần còn lại.</p></div>
   </div>
   <p>Hai mốc này không nhất thiết xảy ra cùng một thời điểm.</p>
-  <p>Mình thấy cách nhìn này thực tế hơn rất nhiều so với việc ép migration phải đạt “100% hoàn hảo” ngay tại phút cutover. Quan trọng là các exception đã được biết, phân loại và có owner xử lý; không phải dashboard phải sạch tuyệt đối mới được xem là thành công.</p>
+  <p>Cách nhìn này thực tế hơn việc ép migration phải “100% sạch” ngay tại phút cutover. Quan trọng là exception nào còn lại đã được biết, có owner và có cách xử lý.</p>
 
-  <h2>30 ngày đối chiếu: để người dùng có thời gian xác nhận dữ liệu thật sự của mình</h2>
-  <p>Vì số lượng người dùng trong đợt migration khá lớn, phần communication với business được chuẩn bị từ sớm. Trước Go-live, kế hoạch cutover, cách đăng nhập, cách sử dụng Microsoft 365 và kênh hỗ trợ được thông báo để người dùng biết chính xác thời điểm thay đổi sẽ xảy ra.</p>
-  <p>Sau khi Go-live, người dùng chuyển sang Microsoft 365 làm nền tảng làm việc chính và được dành <strong>30 ngày để tự kiểm tra, đối chiếu mail, calendar, file và quyền truy cập</strong>. Đây không phải một khoảng chờ thụ động; nó là một reconciliation window được chủ động thiết kế vào project.</p>
-  <p>Nếu trong 30 ngày đó có người dùng báo thiếu file hoặc sai permission, team vẫn còn khả năng quay lại Google Workspace để truy vết theo tên file, đường dẫn, owner hoặc context mà người dùng cung cấp, rồi recovery/reconcile theo từng case cụ thể.</p>
-  <p>Kết quả của giai đoạn này cũng quan trọng như bản thân cutover: sau cửa sổ đối chiếu, không ghi nhận trường hợp mất dữ liệu nghiêm trọng còn tồn đọng; những sai lệch phát sinh chủ yếu thuộc nhóm tìm kiếm, mapping lại quyền hoặc xử lý thủ công theo từng trường hợp.</p>
-  <div class="reconciliation-note"><strong>Điểm mình xem là quan trọng nhất trong cách làm này:</strong> Go-live không đồng nghĩa source cũ phải biến mất ngay lập tức. Khi migration có lượng user và dữ liệu lớn, một khoảng đối chiếu 30 ngày giúp người dùng xác nhận dữ liệu bằng chính workflow thực tế của họ, trong khi team vẫn giữ được khả năng truy hồi Google Workspace để xử lý exception case-by-case.</div>
+  <h2>30 ngày đối chiếu: để người dùng xác nhận dữ liệu bằng công việc thật</h2>
+  <p>Vì số lượng người dùng trong đợt migration khá lớn, communication với business được chuẩn bị từ sớm. Trước Go-live, kế hoạch cutover, cách đăng nhập, cách sử dụng Microsoft 365 và kênh hỗ trợ được thông báo để người dùng biết thời điểm thay đổi.</p>
+  <p>Sau Go-live, người dùng chuyển sang Microsoft 365 làm nền tảng làm việc chính và được dành <strong>30 ngày để tự kiểm tra, đối chiếu mail, calendar, file và quyền truy cập</strong>.</p>
+  <p>Nếu trong thời gian đó có người dùng báo thiếu file hoặc sai permission, team vẫn còn khả năng quay lại Google Workspace để truy vết theo tên file, đường dẫn, owner hoặc context mà người dùng cung cấp, rồi recovery/reconcile theo từng case cụ thể.</p>
+  <p>Sau cửa sổ đối chiếu, không ghi nhận trường hợp mất dữ liệu nghiêm trọng còn tồn đọng; những sai lệch phát sinh chủ yếu thuộc nhóm tìm kiếm, mapping lại quyền hoặc xử lý thủ công theo từng trường hợp.</p>
+  <div class="reconciliation-note"><strong>Điểm mình thấy hợp lý:</strong> Go-live không đồng nghĩa source cũ phải biến mất ngay lập tức. Giữ một khoảng đối chiếu giúp user kiểm tra dữ liệu bằng chính workflow hằng ngày, trong khi team vẫn còn nơi để truy vết khi có exception.</div>
 
   <figure class="article-figure">
     <img src="/assets/blog/Cutover%20to%20Microsoft%20365%20Roadmap.png?v=20260827" alt="Cutover Microsoft 365, 30 ngày post-migration reconciliation, project closure và handover">
-    <figcaption>Go-live là mốc chuyển platform làm việc chính; 30 ngày tiếp theo là thời gian đối chiếu, xử lý exception và hỗ trợ user trước khi project đi đến closure và handover.</figcaption>
+    <figcaption>Go-live là mốc chuyển platform làm việc chính; giai đoạn sau đó dành cho đối chiếu, xử lý exception và hỗ trợ user trước khi closure.</figcaption>
   </figure>
 
-  <h2>Post-migration Reconciliation là một phần của thiết kế</h2>
+  <h2>Post-migration Reconciliation nên được tính từ đầu</h2>
   <p>Sau cutover, hệ thống Google vẫn được duy trì trong một khoảng thời gian để phục vụ đối chiếu và hỗ trợ truy hồi khi cần. Các trường hợp sai lệch được xử lý theo hướng kiểm tra tên file, đường dẫn, owner và permission rồi recovery/reconcile theo từng tình huống.</p>
-  <p>Điều này làm mình liên tưởng đến rollback trong infrastructure migration. Với SaaS migration, không phải lúc nào “rollback toàn bộ” cũng là phương án phù hợp. Thay vào đó, khả năng truy hồi source cũ trong một khoảng thời gian có kiểm soát chính là một safety net rất quan trọng.</p>
-  <blockquote><strong>Migration không kết thúc khi dữ liệu đã copy xong. Nó kết thúc khi tổ chức biết dữ liệu nào đã chuyển, dữ liệu nào cần đối chiếu, ai sở hữu exception và người dùng có thể làm việc ổn định trên platform mới.</strong></blockquote>
+  <p>Với SaaS migration, không phải lúc nào “rollback toàn bộ” cũng là phương án thực tế. Nhiều khi điều cần hơn là vẫn truy hồi được source cũ đủ lâu để xử lý những case còn sót.</p>
+  <blockquote><strong>Migration không kết thúc khi dữ liệu copy xong. Nó gần kết thúc hơn khi team biết phần nào đã chuyển, phần nào còn exception và user đã làm việc ổn định trên platform mới.</strong></blockquote>
 
   <h2>Điều mình giữ lại từ project này</h2>
-  <p>Nhìn từ vai trò Consultant, phần đáng nhớ nhất của project không phải là một command hay một màn hình cấu hình cụ thể.</p>
-  <p>Đó là cách một migration lớn được chia thành những decision nhỏ có thể kiểm chứng: survey trước khi thiết kế, identity trước khi data move, pilot trước rollout, coexistence trước cutover, batch thay cho big bang, communication trước Go-live và reconciliation thay cho giả định rằng mọi thứ sẽ tự khớp sau khi copy.</p>
-  <p>Google Workspace và Microsoft 365 đều là những platform trưởng thành. Nhưng việc chuyển từ platform này sang platform kia vẫn là một thay đổi về identity, collaboration model, permission, endpoint behavior, application dependency và cách vận hành — không chỉ là một bài toán chuyển email và file.</p>
-  <p><strong>Migration tool giúp chuyển dữ liệu. Migration design mới quyết định tổ chức có tiếp tục làm việc bình thường sau khi dữ liệu đã chuyển hay không.</strong></p>
+  <p>Nhìn từ vai trò Consultant, phần đáng nhớ nhất của project không phải một command hay một màn hình cấu hình cụ thể.</p>
+  <p>Mình nhớ cách team chia migration thành các bước nhỏ để kiểm tra dần: survey trước, identity trước data move, pilot trước rollout, coexistence trước cutover, batch thay cho big bang, communication trước Go-live và reconciliation sau đó.</p>
+  <p>Google Workspace và Microsoft 365 đều là những platform trưởng thành. Nhưng chuyển từ platform này sang platform kia vẫn làm thay đổi identity, permission, collaboration, endpoint behavior, application dependency và cách support người dùng — không chỉ email và file.</p>
+  <p><strong>Công cụ giúp chuyển dữ liệu. Cách chuẩn bị và kiểm tra mới quyết định người dùng có làm việc bình thường sau khi chuyển hay không.</strong></p>
 
   <div class="article-signoff">
     <p>Ghi lại từ những trải nghiệm thực tế của mình trong quá trình làm Infrastructure — những câu chuyện vẫn còn tiếp tục.</p>
