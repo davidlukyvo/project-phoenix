@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Từ một static website đến internal portal có SSO | Vo Thanh Sang</title>
+  <meta name="description" content="Một bài toán tưởng như chỉ cần host vài file HTML, nhưng cuối cùng lại dẫn tới những quyết định về ownership, deployment, identity và access control.">
+  <meta property="og:title" content="Từ một static website đến internal portal có SSO | Vo Thanh Sang">
+  <meta property="og:description" content="Một case study về SharePoint, AWS, Microsoft Entra ID, deployment automation và cách ownership dần được tách thành những boundary rõ ràng.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sangvo.me/blog/posts/2026-09-07-static-website-to-internal-portal-sso.html">
+  <link rel="canonical" href="https://sangvo.me/blog/posts/2026-09-07-static-website-to-internal-portal-sso.html">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .article>p:not(.subtitle),.article .article-signoff p{text-align:justify;text-justify:inter-word}
+    .decision-note{margin:30px 0;padding:22px 24px;border-left:5px solid #173f8a;background:#f5f8fc;border-radius:0 14px 14px 0}
+    .lesson{font-size:1.06rem;font-weight:700;color:#102847;margin:30px 0;padding:18px 20px;border-top:1px solid #d9e1eb;border-bottom:1px solid #d9e1eb}
+    .metric-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:30px 0}.metric-strip>div{padding:18px;border:1px solid #dce5ef;border-radius:14px;background:#f8fafc}.metric-strip strong{display:block;color:#173f8a;margin-bottom:7px}.metric-strip span{display:block;font-size:1.08rem;font-weight:750;color:#172033;line-height:1.5}
+    .article figure.article-figure{width:min(1120px,100%)!important;max-width:1120px!important;margin:34px auto 42px!important;transform:none!important}.article figure.article-figure img{display:block;width:100%!important;max-width:100%!important;height:auto;margin:0 auto;border-radius:14px;box-shadow:0 10px 28px rgba(24,48,86,.08);cursor:zoom-in;background:#fff}.article figure.article-figure figcaption{text-align:center;color:#66788a;font-size:.9rem;line-height:1.55;margin:10px auto 0;max-width:980px}.article-tags{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 30px}.article-tags span{display:inline-flex;padding:7px 10px;border-radius:999px;background:#f3f6fa;border:1px solid #dce5ef;color:#344054;font-size:.85rem;font-weight:700}
+    .closing-lines{margin:40px 0 18px;padding:26px 0;border-top:1px solid #dce4ed}.closing-lines p{font-size:1.08rem}.closing-lines strong{color:#102847}.final-line{font-size:1.5rem!important;font-weight:800;color:#102847;margin-top:22px!important}
+    @media(max-width:820px){.article>p:not(.subtitle),.article .article-signoff p{text-align:left}.metric-strip{grid-template-columns:1fr}.article figure.article-figure{width:100%!important;max-width:100%!important;margin:26px auto 32px!important}.article figure.article-figure figcaption{text-align:left}}
+  </style>
+</head>
+<body>
+<nav><div class="wrap"><div class="brand"><a href="/index.html"><img src="/assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="/index.html#about">About</a><a href="/projects/index.html">Case Studies</a><a href="/blog/index.html">Engineering Notes</a><a href="/index.html#career">Career Journey</a></div></div></nav>
+<main><section><article class="article">
+  <div class="kicker">Case Study • AWS / Identity • 2026</div>
+  <h1>Từ một static website đến internal portal có SSO</h1>
+  <p class="subtitle">Một bài toán tưởng như chỉ cần host vài file HTML, nhưng cuối cùng lại dẫn tới những quyết định về ownership, deployment, identity và access control.</p>
+  <div class="article-tags"><span>AWS</span><span>Microsoft Entra ID</span><span>Identity</span><span>SharePoint</span><span>CloudFront</span><span>Cognito</span><span>Deployment Automation</span></div>
+
+  <p>Có những hệ thống lúc mới nhìn vào tưởng khá đơn giản.</p>
+  <p>Một bộ HTML đã có sẵn. Không có application server để vận hành, cũng không có database phía sau. Việc còn lại nghe như chỉ cần tìm chỗ host, upload file lên rồi gửi URL cho người dùng.</p>
+  <p>Nhưng khi bộ HTML đó trở thành một portal dùng trong nội bộ công ty, câu hỏi khá nhanh không còn là <strong>“Host ở đâu?”</strong></p>
+  <p>Mà chuyển thành những câu khác.</p>
+  <p>Ai được quyền xem? Business sẽ publish nội dung bằng cách nào? Có cần cấp cho người làm nội dung quyền vào AWS không? Nếu S3 không public thì CloudFront lấy file bằng cách nào? Người dùng đã có Microsoft 365 và Entra ID rồi, tại sao lại phải tạo thêm một bộ account? Và nếu một người không còn thuộc nhóm được sử dụng portal thì quyền nên được gỡ ở đâu?</p>
+  <p>Rồi còn một câu hỏi khác xuất hiện khi portal lớn dần: nếu bundle từ vài trăm MB tăng lên hơn một GB với hàng chục nghìn file, có thật mỗi lần deploy đều nên tải lại tất cả?</p>
+  <p>Project SGD Portal của mình bắt đầu từ một bài toán static web như vậy. Nhưng phần đáng nhớ nhất cuối cùng lại không nằm ở HTML.</p>
+
+  <h2>Lúc đầu, architecture thực ra khá ngắn</h2>
+  <p>Nếu chỉ nhìn bài toán ban đầu, luồng có thể hình dung khá đơn giản: business chuẩn bị nội dung trên SharePoint, deploy host lấy bundle xuống, đưa lên S3 rồi CloudFront phân phối cho người dùng.</p>
+
+  <figure class="article-figure"><img src="/assets/blog/sgd-portal-initial-content-to-delivery.svg?v=20260907" alt="Version đầu của SGD Portal: Content-to-Delivery từ Business, SharePoint, Deploy Host, Amazon S3, CloudFront đến User"><figcaption>Version đầu — khi bài toán chủ yếu vẫn là đưa một published bundle từ SharePoint lên AWS.</figcaption></figure>
+
+  <p>Ở thời điểm đó, câu chuyện vẫn khá gần với một static website thông thường.</p>
+  <p>Nhưng khi bắt đầu nghĩ đến cách hệ thống sẽ được vận hành sau go-live, mình nhận ra một câu hỏi quan trọng hơn việc chọn AWS service nào:</p>
+  <div class="decision-note"><strong>Ai nên chịu trách nhiệm cho việc gì?</strong></div>
+
+  <h2>Business nên publish nội dung, không nên vận hành AWS</h2>
+  <p>Portal có khá nhiều dashboard, report, HTML và asset do phía business tạo ra. Những nội dung đó sẽ tiếp tục thay đổi sau khi hệ thống đi vào sử dụng.</p>
+  <p>Một phương án kỹ thuật rất dễ nghĩ tới là cho người phụ trách nội dung upload trực tiếp lên S3.</p>
+  <p>Làm được.</p>
+  <p>Nhưng mình không thích boundary đó.</p>
+  <p>Business không cần biết bucket nào đang phục vụ production, không cần AWS credential, không cần biết CloudFront invalidation là gì và cũng không nên phải hiểu deployment pipeline chỉ để publish một phiên bản nội dung mới.</p>
+  <p>Trong khi đó, SharePoint đã là công cụ quen thuộc trong môi trường Microsoft 365 của công ty.</p>
+  <p>Vì vậy mình tách hai việc ra.</p>
+  <p><strong>Business quản lý nội dung trên SharePoint.</strong></p>
+  <p><strong>Infrastructure quản lý deployment sang AWS.</strong></p>
+  <p>Một vùng <code>Published Bundle / Current</code> được dùng như nguồn nội dung đã sẵn sàng để publish. Khi bundle ở đó được xác nhận ready, Infrastructure mới thực hiện deployment.</p>
+  <div class="lesson">SharePoint giữ trạng thái business muốn publish. AWS giữ trạng thái đang phục vụ người dùng.</div>
+  <p>Hai thứ không cần phải là một. Và người làm nội dung cũng không cần được cấp quyền AWS chỉ vì portal cuối cùng được host trên AWS.</p>
+  <p>Nhìn lại, đây có lẽ là quyết định ảnh hưởng đến phần còn lại của architecture nhiều nhất.</p>
+  <p>Mình không bắt đầu bằng câu hỏi <strong>“Dùng AWS service nào?”</strong>. Câu hỏi quan trọng hơn là <strong>“Ai nên chịu trách nhiệm cho việc gì?”</strong></p>
+  <p>Business cần một nơi quen thuộc để chuẩn bị nội dung. Infrastructure cần một deployment path có thể kiểm soát và kiểm tra. Người dùng cần tiếp tục sử dụng corporate identity họ đã có.</p>
+  <p>Khi những boundary đó rõ rồi, việc chọn Graph, S3, CloudFront hay Cognito trở thành phần implementation phía sau.</p>
+
+  <h2>Đọc SharePoint nhưng không cần account cá nhân</h2>
+  <p>Khi đã chọn SharePoint làm source, câu hỏi tiếp theo là deploy host lấy dữ liệu xuống bằng cách nào.</p>
+  <p>Mình không muốn một production workflow phụ thuộc vào account của một cá nhân. Cũng không muốn script unattended phải giữ username/password của user.</p>
+  <p>Phương án cuối cùng sử dụng Microsoft Graph với <strong>app-only authentication bằng certificate</strong>.</p>
+  <p>Nhưng app-only vẫn chưa đủ. Một application có thể dùng certificate mà vẫn được cấp quyền rộng hơn mức cần thiết.</p>
+  <p>Deploy process chỉ cần đọc site phục vụ portal. Không cần đọc cả SharePoint tenant. Vì vậy app được giới hạn bằng <code>Sites.Selected</code>.</p>
+  <p>Đây là một control khá nhỏ nếu nhìn trên architecture diagram. Nhưng mình thấy nó phản ánh đúng một thói quen quan trọng khi làm Infrastructure:</p>
+  <div class="lesson">Mỗi lần cấp quyền, thử hỏi thêm một lần: có thật nó cần nhiều đến vậy không?</div>
+
+  <h2>Khi full sync bắt đầu không còn hợp lý</h2>
+  <p>Ở giai đoạn đầu, deployment khá thẳng. Deploy host lấy bundle từ SharePoint xuống local, validate các file cần thiết, sync sang S3 rồi tạo CloudFront invalidation.</p>
+  <p>Một deployment ở thời điểm đầu ghi nhận bundle khoảng <strong>1.903 file, 652 MB</strong>. Ở quy mô đó, full sync chưa phải vấn đề lớn.</p>
+  <p>Nhưng portal tiếp tục phát triển. Nội dung nhiều hơn. Asset nhiều hơn. Đến một thời điểm, bundle đã tăng lên khoảng <strong>27.641 file và hơn 1,6 GB</strong>.</p>
+  <p>Lúc này câu hỏi trở nên khá rõ:</p>
+  <div class="decision-note"><strong>Nếu lần này chỉ thay vài file, tại sao deployment phải tải lại hơn 27.000 file?</strong></div>
+  <p>Pipeline được chuyển sang hướng incremental. Deploy host giữ local cache và manifest. File mới hoặc thay đổi thì download. File không đổi thì skip. Stale file được xử lý. Validation và guard vẫn chạy trước khi content được sync lên AWS.</p>
+  <p>Implementation đầu tiên cũng không chạy hoàn hảo ngay. Có một lần Smart Incremental V3 fail vì gặp empty path trong bước normalize relative path. Pipeline dừng lại thay vì tiếp tục deploy một bundle chưa chắc chắn.</p>
+  <p>Sau khi xử lý lỗi đó, lần chạy tiếp theo cho một kết quả khá đẹp:</p>
+
+  <div class="metric-strip">
+    <div><strong>Initial Bundle</strong><span>1.903 files</span><span>652 MB</span></div>
+    <div><strong>Current Bundle</strong><span>27.641 files</span><span>1,6 GB</span></div>
+    <div><strong>Incremental Deployment</strong><span>Downloaded: 0</span><span>Skipped: 27.641</span></div>
+  </div>
+
+  <p>Required-file validation và final bundle guard vẫn tiếp tục chạy trước khi sync sang S3 và tạo CloudFront invalidation.</p>
+  <p>Với mình, điều đáng chú ý nhất không phải pipeline chạy nhanh hơn. Mà là deployment bắt đầu hiểu được <strong>state</strong>.</p>
+  <div class="lesson">Skip những gì không cần làm lại, nhưng đừng skip những bước giúp mình biết bundle vẫn đúng.</div>
+
+  <h2>S3 vẫn private, dù đây chỉ là static website</h2>
+  <p>Ở phía AWS, một boundary khác mình muốn giữ khá rõ: <strong>S3 không trở thành public website origin.</strong></p>
+  <p>Nếu mục tiêu cuối cùng là internal portal có authentication, mình không muốn storage layer phải public chỉ vì content là static.</p>
+  <p>S3 được giữ private. CloudFront là delivery layer phía trước. Origin Access Control cho phép CloudFront đọc object từ S3 nhưng browser không cần truy cập bucket trực tiếp.</p>
+  <p>Nhìn từ phía người dùng, họ chỉ biết portal URL. Nhìn từ phía storage, biết S3 URL không có nghĩa là có thể bypass CloudFront để lấy content.</p>
+  <p>Điều này nghe khá bình thường khi nhìn architecture cuối. Nhưng nó thay đổi cách mình nghĩ về static hosting.</p>
+  <p><strong>Static không đồng nghĩa với “để file ở một chỗ public là xong”.</strong></p>
+
+  <h2>Authentication và authorization là hai chuyện khác nhau</h2>
+  <p>Một internal portal cũng không nên bắt nhân viên nhớ thêm username/password nếu công ty đã có identity platform.</p>
+  <p>Người dùng đã đăng nhập Microsoft 365 bằng Entra ID. Vì vậy mục tiêu là tận dụng corporate identity đó.</p>
+  <p>Ở phía AWS, Cognito đảm nhiệm federation. Lambda@Edge nằm trên request path của CloudFront để kiểm tra authentication/session trước khi request đi tiếp tới content.</p>
+  <p>Nhưng login thành công chưa phải câu hỏi cuối cùng.</p>
+  <p><strong>Có account công ty không đồng nghĩa với việc được phép sử dụng mọi internal application.</strong></p>
+  <p>Ở một giai đoạn của project, access control vẫn còn một phần logic hoặc danh sách user ở phía AWS. Cách đó chạy được, nhưng nó tạo ra nhiều nơi cùng quản lý một quyền.</p>
+  <p>Khi user thay đổi access, phải kiểm tra nhiều chỗ. Khi audit, lại xuất hiện câu hỏi: <strong>“Source of truth cho quyền truy cập thực sự nằm ở đâu?”</strong></p>
+  <p>Mình không muốn câu trả lời là: “Phải kiểm tra cả Entra lẫn một danh sách ở AWS.”</p>
+  <p>Vì vậy architecture được chỉnh lại.</p>
+  <p>Authorization cuối cùng được đưa về <strong>Microsoft Entra Enterprise Application</strong>, sử dụng <code>Assignment required</code> cùng <code>Users and groups</code>.</p>
+  <p>Cognito và Lambda@Edge tiếp tục xử lý authentication flow, token/session và bảo vệ request path. Entra trả lời câu hỏi còn lại: <strong>Identity này có được phép sử dụng application hay không?</strong></p>
+  <p>Từ đó việc cấp hoặc thu hồi quyền không cần sửa Lambda, không cần update một per-user allow-list khác ở AWS và cũng không cần deploy application chỉ để thêm một người.</p>
+  <p>Điều mình thích ở thay đổi này không phải vì architecture có thêm một control. Mà vì nó <strong>bớt đi một nơi phải quản lý quyền</strong>.</p>
+  <div class="lesson">Authentication chứng minh bạn là ai. Authorization quyết định bạn có được vào hay không. Và với một application, câu trả lời thứ hai nên có một nơi rõ ràng để quản lý.</div>
+
+  <h2>Deploy vẫn là một hành động có chủ đích</h2>
+  <p>Có một chỗ mình không cố automation bằng mọi giá. Đó là thời điểm publish production.</p>
+  <p>SharePoint là nơi business chuẩn bị bundle. Nhưng một file xuất hiện ở source không có nghĩa production phải thay đổi ngay lập tức.</p>
+  <p>Deployment vẫn được thực hiện khi phía liên quan xác nhận bundle đã ready. Monthly release là cadence dự kiến. Emergency patch vẫn có đường xử lý manual scan + deploy riêng.</p>
+  <p>Phần automation tập trung vào những việc máy làm tốt: đọc đúng source, nhận biết file thay đổi, sync, loại stale file, validation, guard, upload, invalidation và logging.</p>
+  <p>Con người vẫn giữ quyết định: <strong>“Phiên bản này đã sẵn sàng lên production chưa?”</strong></p>
+  <p>Mình không nghĩ automation càng nhiều thì hệ thống mặc nhiên càng tốt. Một pipeline tốt cũng cần biết chỗ nào không nên tự quyết định thay con người.</p>
+
+  <h2><code>Deployment completed</code> chưa phải câu trả lời cuối cùng</h2>
+  <p>Một static portal vẫn có nhiều lớp có thể hỏng độc lập.</p>
+  <p>SharePoint đọc được nhưng bundle sai. Bundle đúng nhưng S3 thiếu file. S3 đủ nhưng CloudFront còn cache cũ. Content delivery đúng nhưng authentication flow lỗi. Login thành công nhưng authorization sai.</p>
+  <p>Vì vậy mình không muốn định nghĩa thành công chỉ bằng một dòng <code>Deployment completed</code>.</p>
+  <p>Pipeline có required-file validation và final local bundle guard trước khi đưa content sang AWS. Ở phía delivery còn phải kiểm tra URL thực tế, redirect authentication, user được phép vào và user không có quyền phải bị từ chối.</p>
+  <p>Câu hỏi sau một deployment vì vậy không chỉ là <strong>“Script có chạy xong không?”</strong></p>
+  <div class="decision-note"><strong>Một user đúng quyền có thật sự đi hết đường từ browser tới content không?</strong></div>
+
+  <h2>Architecture cuối cùng</h2>
+  <p>Sau các vòng thay đổi, architecture cuối cùng trông gọn hơn rất nhiều so với những câu hỏi đã đi qua để có được nó.</p>
+
+  <figure class="article-figure"><img src="/assets/blog/sgd-portal-content-to-access-architecture.svg?v=20260907" alt="Version cuối của SGD Portal từ content ownership đến deployment, private S3, CloudFront, Lambda at Edge, Cognito và Microsoft Entra ID authorization"><figcaption>Điều thay đổi lớn nhất không phải việc thêm Cognito hay Lambda@Edge. Điều thay đổi lớn nhất là mỗi quyết định dần có một boundary và một owner rõ ràng hơn.</figcaption></figure>
+
+  <p>Nếu chỉ nhìn sơ đồ cuối, architecture trông khá gọn.</p>
+  <p>Nhưng sơ đồ không cho thấy lúc pipeline ban đầu còn full sync. Không thấy bundle từ khoảng 652 MB tăng lên hơn 1,6 GB. Không thấy lần incremental script fail vì empty path. Không thấy lúc access control còn nằm ở nhiều nơi.</p>
+  <p>Và cũng không thấy câu hỏi ban đầu chỉ đơn giản là: <strong>“Đưa mấy file HTML này lên đâu?”</strong></p>
+
+  <h2>Static không có nghĩa là đơn giản</h2>
+  <div class="closing-lines">
+    <p>Nhìn từ phía người dùng, project này cuối cùng vẫn chỉ là một URL.</p>
+    <p>Mở trình duyệt. Đăng nhập bằng account công ty. Xem nội dung.</p>
+    <p>Nhưng phía sau URL đó là những câu hỏi về ai sở hữu content, ai được phép publish, application được đọc SharePoint đến đâu, S3 có cần public hay không, corporate identity đi qua AWS như thế nào, quyền truy cập được quản lý ở đâu và một deployment được xem là thành công khi nào.</p>
+    <p>Khi bundle tăng lên hơn 27.000 file, ngay cả cách deploy cũng phải thay đổi theo thực tế.</p>
+    <p>Người dùng không cần nhìn thấy những thứ đó. Và có lẽ họ cũng không nên phải nhìn thấy.</p>
+    <p><strong>Người dùng chỉ nhìn thấy một URL.</strong></p>
+    <p><strong>Nhưng phía sau URL đó là identity, authorization, deployment, validation, rollback và ownership.</strong></p>
+    <p>Có lẽ đó là điều mình nhớ nhất từ project này.</p>
+    <p class="final-line">Static không có nghĩa là đơn giản.</p>
+  </div>
+
+  <div class="article-signoff"><p><em>Ghi chép từ một project internal portal – 2026.</em></p></div>
+</article></section></main>
+<footer><div class="wrap"><a href="/blog/" style="color:inherit;text-decoration:none">© 2026 Vo Thanh Sang • All rights reserved.</a></div></footer>
+<script src="/assets/image-lightbox.js"></script>
+</body>
+</html>
