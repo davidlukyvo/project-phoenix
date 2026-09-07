@@ -31,18 +31,18 @@
   <div class="article-tags"><span>AWS</span><span>Microsoft Entra ID</span><span>Identity</span><span>SharePoint</span><span>CloudFront</span><span>Cognito</span><span>Deployment Automation</span></div>
 
   <p>Có những hệ thống lúc mới nhìn vào tưởng khá đơn giản.</p>
-  <p>Một bộ HTML đã có sẵn. Không có application server để vận hành, cũng không có database phía sau. Việc còn lại nghe như chỉ cần tìm chỗ host, upload file lên rồi gửi URL cho người dùng.</p>
-  <p>Nhưng khi bộ HTML đó trở thành một portal dùng trong nội bộ công ty, câu hỏi khá nhanh không còn là <strong>“Host ở đâu?”</strong></p>
-  <p>Mà chuyển thành những câu khác.</p>
-  <p>Ai được quyền xem? Business sẽ publish nội dung bằng cách nào? Có cần cấp cho người làm nội dung quyền vào AWS không? Nếu S3 không public thì CloudFront lấy file bằng cách nào? Người dùng đã có Microsoft 365 và Entra ID rồi, tại sao lại phải tạo thêm một bộ account? Và nếu một người không còn thuộc nhóm được sử dụng portal thì quyền nên được gỡ ở đâu?</p>
-  <p>Rồi còn một câu hỏi khác xuất hiện khi portal lớn dần: nếu bundle từ vài trăm MB tăng lên hơn một GB với hàng chục nghìn file, có thật mỗi lần deploy đều nên tải lại tất cả?</p>
-  <p>Project SGD Portal của mình bắt đầu từ một bài toán static web như vậy. Nhưng phần đáng nhớ nhất cuối cùng lại không nằm ở HTML.</p>
+  <p>Một bộ HTML đã có sẵn. Dashboard cũng đã chạy được. Ở giai đoạn đầu, cách sử dụng vẫn còn khá thủ công: nội dung có lúc được mở từ máy cá nhân hoặc qua một đường tunnel, và khi cần chia sẻ thì file HTML lại được gửi qua email hoặc chat.</p>
+  <p>Cách đó đủ để thử nghiệm, nhưng không phải cách mình muốn giữ khi portal bắt đầu được nhiều người sử dụng hơn.</p>
+  <p>Không có một URL cố định 24/7. Việc phân quyền khó kiểm soát. Và quan trọng hơn, một bundle HTML không nhất thiết chỉ chứa “giao diện”. Phía sau dashboard vẫn có thể là dữ liệu nội bộ mà mình không muốn bị phát tán chỉ vì một file được forward nhầm.</p>
+  <p>Vì vậy câu hỏi không còn đơn giản là <strong>“Đưa mấy file HTML này lên đâu?”</strong></p>
+  <p>Mà trở thành: <strong>“Làm sao biến nó thành một internal portal mà business vẫn publish được nội dung, người dùng có một URL ổn định và quyền truy cập vẫn được kiểm soát?”</strong></p>
+  <p>Từ đó mới kéo theo những câu hỏi khác: Business sẽ publish bằng cách nào? Có cần cấp cho người làm nội dung quyền vào AWS không? Nếu S3 không public thì CloudFront lấy file bằng cách nào? Người dùng đã có Microsoft 365 và Entra ID rồi, tại sao lại phải tạo thêm một bộ account? Và nếu một người không còn thuộc nhóm được sử dụng portal thì quyền nên được gỡ ở đâu?</p>
+  <p>Rồi khi portal lớn dần, lại có thêm một câu hỏi khác: nếu bundle từ vài trăm MB tăng lên hơn một GB với hàng chục nghìn file, có thật mỗi lần deploy đều nên tải lại tất cả?</p>
+  <p>Project SGD Portal bắt đầu từ những câu hỏi như vậy. Và phần đáng nhớ nhất cuối cùng lại không nằm ở HTML.</p>
 
   <h2>Lúc đầu, architecture thực ra khá ngắn</h2>
   <p>Nếu chỉ nhìn bài toán ban đầu, luồng có thể hình dung khá đơn giản: business chuẩn bị nội dung trên SharePoint, deploy host lấy bundle xuống, đưa lên S3 rồi CloudFront phân phối cho người dùng.</p>
-
   <figure class="article-figure"><img src="/assets/blog/sgd-portal-initial-content-to-delivery.svg?v=20260907" alt="Version đầu của SGD Portal: Content-to-Delivery từ Business, SharePoint, Deploy Host, Amazon S3, CloudFront đến User"><figcaption>Version đầu — khi bài toán chủ yếu vẫn là đưa một published bundle từ SharePoint lên AWS.</figcaption></figure>
-
   <p>Ở thời điểm đó, câu chuyện vẫn khá gần với một static website thông thường.</p>
   <p>Nhưng khi bắt đầu nghĩ đến cách hệ thống sẽ được vận hành sau go-live, mình nhận ra một câu hỏi quan trọng hơn việc chọn AWS service nào:</p>
   <div class="decision-note"><strong>Ai nên chịu trách nhiệm cho việc gì?</strong></div>
@@ -59,7 +59,10 @@
   <p><strong>Infrastructure quản lý deployment sang AWS.</strong></p>
   <p>Một vùng <code>Published Bundle / Current</code> được dùng như nguồn nội dung đã sẵn sàng để publish. Khi bundle ở đó được xác nhận ready, Infrastructure mới thực hiện deployment.</p>
   <div class="lesson">SharePoint giữ trạng thái business muốn publish. AWS giữ trạng thái đang phục vụ người dùng.</div>
-  <p>Hai thứ không cần phải là một. Và người làm nội dung cũng không cần được cấp quyền AWS chỉ vì portal cuối cùng được host trên AWS.</p>
+  <p>Có một boundary khác cũng cần rõ: <strong>publish dashboard không có nghĩa là publish toàn bộ source phía sau dashboard.</strong></p>
+  <p>Production bundle chỉ nên chứa những gì runtime thật sự cần. Source workbook, file làm việc, archive, backup hay artifact dùng trong quá trình build không nên tự động đi theo chỉ vì chúng nằm gần nhau trong cùng một thư mục.</p>
+  <p>Với mình, đây cũng là một phần của content ownership: business quyết định nội dung nào đã ready, còn deployment process phải đảm bảo chỉ đúng runtime bundle đó được đi tiếp tới production.</p>
+  <p>Hai trạng thái không cần phải là một. Và người làm nội dung cũng không cần được cấp quyền AWS chỉ vì portal cuối cùng được host trên AWS.</p>
   <p>Nhìn lại, đây có lẽ là quyết định ảnh hưởng đến phần còn lại của architecture nhiều nhất.</p>
   <p>Mình không bắt đầu bằng câu hỏi <strong>“Dùng AWS service nào?”</strong>. Câu hỏi quan trọng hơn là <strong>“Ai nên chịu trách nhiệm cho việc gì?”</strong></p>
   <p>Business cần một nơi quen thuộc để chuẩn bị nội dung. Infrastructure cần một deployment path có thể kiểm soát và kiểm tra. Người dùng cần tiếp tục sử dụng corporate identity họ đã có.</p>
@@ -83,13 +86,7 @@
   <p>Pipeline được chuyển sang hướng incremental. Deploy host giữ local cache và manifest. File mới hoặc thay đổi thì download. File không đổi thì skip. Stale file được xử lý. Validation và guard vẫn chạy trước khi content được sync lên AWS.</p>
   <p>Implementation đầu tiên cũng không chạy hoàn hảo ngay. Có một lần Smart Incremental V3 fail vì gặp empty path trong bước normalize relative path. Pipeline dừng lại thay vì tiếp tục deploy một bundle chưa chắc chắn.</p>
   <p>Sau khi xử lý lỗi đó, lần chạy tiếp theo cho một kết quả khá đẹp:</p>
-
-  <div class="metric-strip">
-    <div><strong>Initial Bundle</strong><span>1.903 files</span><span>652 MB</span></div>
-    <div><strong>Current Bundle</strong><span>27.641 files</span><span>1,6 GB</span></div>
-    <div><strong>Incremental Deployment</strong><span>Downloaded: 0</span><span>Skipped: 27.641</span></div>
-  </div>
-
+  <div class="metric-strip"><div><strong>Initial Bundle</strong><span>1.903 files</span><span>652 MB</span></div><div><strong>Current Bundle</strong><span>27.641 files</span><span>1,6 GB</span></div><div><strong>Incremental Deployment</strong><span>Downloaded: 0</span><span>Skipped: 27.641</span></div></div>
   <p>Required-file validation và final bundle guard vẫn tiếp tục chạy trước khi sync sang S3 và tạo CloudFront invalidation.</p>
   <p>Với mình, điều đáng chú ý nhất không phải pipeline chạy nhanh hơn. Mà là deployment bắt đầu hiểu được <strong>state</strong>.</p>
   <div class="lesson">Skip những gì không cần làm lại, nhưng đừng skip những bước giúp mình biết bundle vẫn đúng.</div>
@@ -106,8 +103,8 @@
   <p>Ở phía AWS, Cognito đảm nhiệm federation. Lambda@Edge nằm trên request path của CloudFront để kiểm tra authentication/session trước khi request đi tiếp tới content.</p>
   <p>Nhưng login thành công chưa phải câu hỏi cuối cùng.</p>
   <div class="decision-note"><strong>Có account công ty không đồng nghĩa với việc được phép sử dụng mọi internal application.</strong></div>
-  <p>Ở một giai đoạn của project, access control vẫn còn một phần logic hoặc danh sách user ở phía AWS. Cách đó chạy được, nhưng nó tạo ra nhiều nơi cùng quản lý một quyền.</p>
-  <p>Khi user thay đổi access, phải kiểm tra nhiều chỗ. Khi audit, lại xuất hiện câu hỏi: <strong>“Source of truth cho quyền truy cập thực sự nằm ở đâu?”</strong></p>
+  <p>Điều thú vị là ngay trong proposal ban đầu, access vẫn còn được nghĩ theo hướng một allow-list giới hạn. Cách đó phù hợp cho pilot, nhưng khi chuẩn bị vận hành lâu dài mình bắt đầu thấy một vấn đề: nếu Entra đã là corporate identity source thì tại sao application lại cần thêm một danh sách user thứ hai ở AWS?</p>
+  <p>Cách allow-list vẫn chạy được, nhưng nó tạo ra nhiều nơi cùng quản lý một quyền. Khi user thay đổi access, phải kiểm tra nhiều chỗ. Khi audit, lại xuất hiện câu hỏi: <strong>“Source of truth cho quyền truy cập thực sự nằm ở đâu?”</strong></p>
   <p>Mình không muốn câu trả lời là: “Phải kiểm tra cả Entra lẫn một danh sách ở AWS.”</p>
   <p>Vì vậy architecture được chỉnh lại.</p>
   <p>Authorization cuối cùng được đưa về <strong>Microsoft Entra Enterprise Application</strong>, sử dụng <code>Assignment required</code> cùng <code>Users and groups</code>.</p>
@@ -135,9 +132,7 @@
 
   <h2>Architecture cuối cùng</h2>
   <p>Sau các vòng thay đổi, architecture cuối cùng nhìn khá gọn. Nhưng điều quan trọng hơn số lượng service là các boundary đã rõ hơn: business sở hữu content, Infrastructure sở hữu deployment, storage vẫn private, AWS xử lý delivery/authentication path và Entra giữ application authorization.</p>
-
   <figure class="article-figure"><img src="/assets/blog/sgd-portal-content-to-access-architecture.png?v=20260907b" alt="Content-to-Access Architecture của SGD Portal từ SharePoint đến Microsoft Entra ID, kèm Before vs After Metrics"></figure>
-
   <p>Nếu chỉ nhìn diagram cuối, architecture trông khá đơn giản. Nhưng nó không cho thấy lúc pipeline ban đầu còn full sync, lúc bundle tăng từ khoảng 652 MB lên hơn 1,6 GB, lần incremental script fail vì empty path hay lúc access control còn nằm ở nhiều nơi.</p>
   <p>Và cũng không thấy câu hỏi ban đầu chỉ đơn giản là: <strong>“Đưa mấy file HTML này lên đâu?”</strong></p>
 
@@ -153,7 +148,6 @@
     <p>Có lẽ đó là điều mình nhớ nhất từ project này.</p>
     <p class="final-line">Static không có nghĩa là đơn giản.</p>
   </div>
-
   <div class="article-signoff"><p>Ghi lại từ những trải nghiệm thực tế của mình trong quá trình làm Infrastructure — những câu chuyện vẫn còn tiếp tục.</p><a href="2026-08-25-least-privilege-bastion-access.html">Đọc trước ← Least Privilege trong thực tế</a><br><a href="2026-08-25-building-a-practical-enterprise-noc.html">Đọc tiếp → Xây dựng một Enterprise NOC thực dụng</a></div>
 </article></section></main>
 <footer><div class="wrap"><a href="/blog/" style="color:inherit;text-decoration:none">© 2026 Vo Thanh Sang • All rights reserved.</a></div></footer>
