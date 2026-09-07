@@ -136,7 +136,7 @@
   <h2>Architecture cuối cùng</h2>
   <p>Sau các vòng thay đổi, architecture cuối cùng nhìn khá gọn. Nhưng điều quan trọng hơn số lượng service là các boundary đã rõ hơn: business sở hữu content, Infrastructure sở hữu deployment, storage vẫn private, AWS xử lý delivery/authentication path và Entra giữ application authorization.</p>
 
-  <figure class="article-figure"><img src="/assets/blog/sgd-portal-content-to-access-architecture.png?v=20260907b" alt="Content-to-Access Architecture của SGD Portal từ SharePoint đến Microsoft Entra ID, kèm Before vs After Metrics"><figcaption>Điều thay đổi lớn nhất không phải việc thêm Cognito hay Lambda@Edge. Điều thay đổi lớn nhất là mỗi quyết định dần có một boundary và một owner rõ ràng hơn.</figcaption></figure>
+  <figure class="article-figure"><img src="/assets/blog/sgd-portal-content-to-access-architecture.png?v=20260907b" alt="Content-to-Access Architecture của SGD Portal từ SharePoint đến Microsoft Entra ID, kèm Before vs After Metrics"></figure>
 
   <p>Nếu chỉ nhìn diagram cuối, architecture trông khá đơn giản. Nhưng nó không cho thấy lúc pipeline ban đầu còn full sync, lúc bundle tăng từ khoảng 652 MB lên hơn 1,6 GB, lần incremental script fail vì empty path hay lúc access control còn nằm ở nhiều nơi.</p>
   <p>Và cũng không thấy câu hỏi ban đầu chỉ đơn giản là: <strong>“Đưa mấy file HTML này lên đâu?”</strong></p>
@@ -154,7 +154,7 @@
     <p class="final-line">Static không có nghĩa là đơn giản.</p>
   </div>
 
-  <div class="article-signoff"><p><em>Ghi chép từ một project internal portal – 2026.</em></p></div>
+  <div class="article-signoff"><p>Ghi lại từ những trải nghiệm thực tế của mình trong quá trình làm Infrastructure — những câu chuyện vẫn còn tiếp tục.</p><a href="2026-08-25-least-privilege-bastion-access.html">Đọc trước ← Least Privilege trong thực tế</a><br><a href="2026-08-25-building-a-practical-enterprise-noc.html">Đọc tiếp → Xây dựng một Enterprise NOC thực dụng</a></div>
 </article></section></main>
 <footer><div class="wrap"><a href="/blog/" style="color:inherit;text-decoration:none">© 2026 Vo Thanh Sang • All rights reserved.</a></div></footer>
 <script src="/assets/image-lightbox.js"></script>
