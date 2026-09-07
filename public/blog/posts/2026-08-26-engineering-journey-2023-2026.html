@@ -3,85 +3,57 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Một vài dấu mốc Infrastructure 2023–2026 | Vo Thanh Sang</title>
-  <meta name="description" content="Nhìn lại một vài project Infrastructure gần đây và những bài học còn ở lại sau cutover, failover, migration và vận hành thực tế.">
-  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../assets/style.css">
+  <title>Infrastructure Projects 2023–2026 | Network, Security, Cloud & Operations | Vo Thanh Sang</title>
+  <meta name="description" content="Nhìn lại các project Infrastructure 2023–2026 của Vo Thanh Sang: Load Balancer, Palo Alto, FortiGate, IPS, Capacity Planning, Monitoring, Backup/DR, Proxmox và những bài học sau cutover.">
+  <meta name="author" content="Vo Thanh Sang">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <link rel="canonical" href="https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026.html">
+  <meta property="og:title" content="Một vài dấu mốc Infrastructure 2023–2026">
+  <meta property="og:description" content="Một vài project về Network, Security, Monitoring, Recovery và những bài học còn ở lại sau cutover, failover và migration.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026.html">
+  <meta property="og:site_name" content="Vo Thanh Sang">
+  <meta property="og:locale" content="vi_VN">
+  <meta property="og:image" content="https://sangvo.me/assets/og-card.svg">
+  <meta property="og:image:alt" content="Infrastructure projects 2023 to 2026 by Vo Thanh Sang">
+  <meta property="article:published_time" content="2026-08-26T00:00:00+07:00"><meta property="article:modified_time" content="2026-09-07T13:05:00+07:00"><meta property="article:author" content="Vo Thanh Sang"><meta property="article:section" content="Infrastructure"><meta property="article:tag" content="Infrastructure"><meta property="article:tag" content="Network Security"><meta property="article:tag" content="Monitoring"><meta property="article:tag" content="Disaster Recovery"><meta property="article:tag" content="Proxmox">
+  <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Infrastructure Projects 2023–2026"><meta name="twitter:description" content="Network, Security, Monitoring, Recovery và những bài học còn lại sau các project Infrastructure."><meta name="twitter:image" content="https://sangvo.me/assets/og-card.svg">
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../../assets/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026.html#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026.html"},"headline":"Một vài dấu mốc Infrastructure 2023–2026","description":"Nhìn lại các project Network, Security, Monitoring, Recovery và Infrastructure từ 2023 đến 2026.","image":"https://sangvo.me/assets/og-card.svg","datePublished":"2026-08-26T00:00:00+07:00","dateModified":"2026-09-07T13:05:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["Enterprise Infrastructure","Network Security","Firewall Migration","Monitoring","Disaster Recovery","Proxmox","Infrastructure Projects"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
 </head>
 <body>
-<nav>
-  <div class="wrap">
-    <div class="brand"><a href="/index.html"><img src="/assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div>
-    <div class="links"><a href="/index.html#about">About</a><a href="/projects/index.html">Case Studies</a><a href="/blog/index.html">Engineering Notes</a><a href="/index.html#career">Career Journey</a></div>
-  </div>
-</nav>
-
-<header class="hero">
-  <div class="wrap">
-    <div class="kicker">FIELD NOTES • 2023–2026</div>
-    <h1>Một vài dấu mốc Infrastructure 2023–2026</h1>
-    <p class="subtitle">Không phải danh sách thành tích. Chỉ là vài project gần đây mà khi nhìn lại, mình vẫn nhớ rõ một quyết định, một lần cutover hoặc một bài học vận hành đi cùng nó.</p>
-  </div>
-</header>
-
-<main>
-<article class="article">
+<nav><div class="wrap"><div class="brand"><a href="/index.html"><img src="/assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="/index.html#about">About</a><a href="/projects/index.html">Case Studies</a><a href="/blog/index.html">Engineering Notes</a><a href="/index.html#career">Career Journey</a></div></div></nav>
+<header class="hero"><div class="wrap"><div class="kicker">FIELD NOTES • 2023–2026</div><h1>Một vài dấu mốc Infrastructure 2023–2026</h1><p class="subtitle">Không phải danh sách thành tích. Chỉ là vài project gần đây mà khi nhìn lại, mình vẫn nhớ rõ một quyết định, một lần cutover hoặc một bài học vận hành đi cùng nó.</p></div></header>
+<main><article class="article">
   <p>Khi nhìn lại những project từ 2023 đến nay, thứ mình nhớ nhất thường không phải model thiết bị. Có khi đó là một rollback plan được chuẩn bị kỹ nhưng cuối cùng không phải dùng. Có khi là một service nhỏ trong UAT khiến cả team phải nhìn lại cách kiểm tra hệ thống. Có khi chỉ là một dashboard “xanh” nhưng chưa đủ để kết luận mọi thứ ổn.</p>
-
   <p>Mỗi project bên dưới có bối cảnh khác nhau. Mình gom lại ở đây vì chúng cho thấy khá rõ cách công việc Infrastructure thay đổi theo thời gian, trong khi vài câu hỏi cũ vẫn quay lại: <em>nếu hỏng thì hỏng ở đâu, kiểm tra thế nào, và làm sao biết service đã thực sự trở lại?</em></p>
-
   <figure><img src="/assets/blog/journey-2023-2026.svg" alt="Một vài dấu mốc Infrastructure từ 2023 đến 2026"><figcaption>Một vài project gần đây, nhìn theo thứ tự thời gian hơn là theo tên vendor.</figcaption></figure>
-
   <h2>2023: Load Balancer và bài học về rollback</h2>
   <p>Một trong những project mình còn nhớ khá rõ là đợt thay Load Balancer. Công việc đi từ assessment, procurement và FDD sang configuration preparation, UAT, Change Request, cutover rồi monitoring sau thay đổi.</p>
-
   <p>Phần khó không nằm ở việc thiết bị mới có nhiều tính năng hơn. Phần khó là làm cho cả team cùng hiểu dependency, điều kiện nào được xem là pass, khi nào dừng troubleshooting và khi nào phải rollback. Từ những project kiểu này, rollback dần trở thành một phần bình thường của design thay vì một mục viết cho đủ trong Change Request.</p>
-
   <p>Cũng trong giai đoạn đó có những bài toán nhỏ hơn như resilient uplink cho Internet Leased Line, AWS Direct Connect hay hạ tầng New Office. Chúng nhắc mình rằng hệ thống nhỏ vẫn có failure mode của nó; không cần phải biến mọi thứ thành một “mini data center”, nhưng cũng không nên bỏ qua redundancy, security và cách quay lại trạng thái cũ.</p>
-
   <h2>2024: PA-3050 → PA-3410 và khoảng cách giữa HA với service</h2>
   <p>Cuối năm 2024, project chuyển External Firewall từ Palo Alto PA-3050 sang PA-3410 làm rõ một chuyện mà sau này mình nhắc lại khá nhiều: <strong>HA xanh chưa phải là kết quả cuối cùng của cutover.</strong></p>
-
   <p>Trong traffic path còn nhiều lớp khác, gồm Internal Firewall Fortinet 200D và IPS. UAT vì vậy không thể chỉ dừng ở việc HA đã hình thành hay policy đã migrate. Checklist còn phải đi qua IPSec VPN, SSL Decryption, public application, reporting, failover và GlobalProtect Pre-logon.</p>
-
   <p>GlobalProtect Pre-logon là ví dụ rất điển hình. Trên giấy nó chỉ là một dòng trong checklist; ngoài thực tế, nếu flow này hỏng thì laptop ở ngoài văn phòng có thể không vào được service nội bộ dù cặp firewall vẫn báo healthy.</p>
-
   <p>Từ project này mình bắt đầu tách rất rõ hai việc: <strong>device validation</strong> và <strong>service validation</strong>. Cái đầu cho biết platform còn đứng. Cái sau mới cho biết người dùng và application còn làm việc như trước hay không.</p>
-
   <h2>Đầu 2025: FortiGate và IPS — thay đổi Security theo từng lớp</h2>
   <p>Đầu năm 2025 có hai project Security Infrastructure diễn ra khá gần nhau: chuyển FortiGate 600D sang 601F tại site Hậu Giang và chuyển Trellix IPS NS-7100 sang NS-7500.</p>
-
   <p>Với FortiGate, mục tiêu là giữ được HA/cluster và service của site trong lúc đổi platform. Với IPS, cách làm lại khác: đưa hệ thống vào In-Line Detection để quan sát trước, sau đó mới tăng dần enforcement. Bật blocking ngay từ đầu có thể rất “đẹp” trên policy, nhưng nếu false positive chặn business traffic thì cái giá vận hành lại khác.</p>
-
   <p>Khi nhìn External Firewall, Internal Firewall và IPS trên cùng một traffic path, mình thấy rõ hơn rằng Security không phải một box. Thay đổi ở một lớp luôn cần được kiểm tra trong mối quan hệ với các lớp còn lại.</p>
-
   <h2>2025: Capacity còn dư nhưng vẫn phải nghĩ đến Lifecycle</h2>
   <p>Một Capacity Assessment sau đó lại đưa ra câu hỏi khác: nếu CPU và RAM vẫn còn dư thì có cần thay thiết bị không?</p>
-
   <p>Câu trả lời không nằm ở utilization một mình. EOS/EOL, supportability, dependency, khả năng thay thế và recovery path cũng là risk. Có những hệ thống nhìn rất “khỏe” trên graph nhưng về mặt lifecycle đã bắt đầu tạo áp lực cho vận hành.</p>
-
   <h2>2025–2026: những bài học cũ xuất hiện trong công việc mới</h2>
   <p>Sang giai đoạn sau, công việc của mình trải rộng hơn: Monitoring/NOC, centralized logging, backup và restore test, Microsoft 365/identity, endpoint security, bastion access, Proxmox/PBS và automation.</p>
-
   <p>Nhưng những câu hỏi lại khá quen. Monitoring có thật sự phản ánh service không? Backup job Success có restore được không? Bastion có cần full sudo không? Tunnel UP có đồng nghĩa application reachability không? HA role đã chuyển nhưng user có làm việc bình thường không?</p>
-
   <figure><img src="/assets/blog/journey-evolution.svg" alt="Những câu hỏi lặp lại trong công việc Infrastructure"><figcaption>Công nghệ thay đổi, nhưng validation, dependency và recovery vẫn thường quay lại.</figcaption></figure>
-
   <h2>Nhìn lại, mình nhớ bài học hơn là tên thiết bị</h2>
   <p>Peplink làm mình nhớ đến rollback. Palo Alto nhắc mình phải đi hết đến service validation. FortiGate và IPS cho thấy Security phải nhìn theo traffic path. Capacity Assessment kéo câu chuyện từ performance sang lifecycle. Monitoring và Backup lại buộc mình kiểm tra xem trạng thái “xanh” có thật sự đại diện cho khả năng vận hành hay không.</p>
-
   <p>Vendor và công nghệ vẫn quan trọng vì đó là công cụ mình dùng mỗi ngày. Nhưng nếu phải chọn thứ còn ở lại lâu hơn sau một project, mình chọn cách đặt câu hỏi về dependency, failure, validation và recovery.</p>
-
   <p>Những project trong bài chỉ là vài dấu mốc gần đây. Mỗi cái còn nhiều chi tiết riêng, và một số câu chuyện mình đã tách thành các bài riêng để viết kỹ hơn.</p>
-
-  <div class="article-signoff">
-    <p>Ghi lại từ những trải nghiệm thực tế của mình trong quá trình làm Infrastructure — những câu chuyện vẫn còn tiếp tục.</p>
-    <a href="2026-08-25-building-a-practical-enterprise-noc.html">Đọc tiếp: Xây dựng Enterprise NOC thực dụng →</a>
-  </div>
-</article>
-</main>
-
+  <div class="article-signoff"><p>Ghi lại từ những trải nghiệm thực tế của mình trong quá trình làm Infrastructure — những câu chuyện vẫn còn tiếp tục.</p><a href="2026-08-25-building-a-practical-enterprise-noc.html">Đọc tiếp: Xây dựng Enterprise NOC thực dụng →</a></div>
+</article></main>
 <footer><div class="wrap"><a href="/blog/" style="color:inherit;text-decoration:none">© 2026 Vo Thanh Sang • All rights reserved.</a></div></footer>
 <script src="/assets/image-lightbox.js"></script>
-</body>
-</html>
+</body></html>
