@@ -7,11 +7,11 @@
   <meta name="description" content="Nhìn lại các project Infrastructure 2023–2026 của Vo Thanh Sang: Load Balancer, Palo Alto, FortiGate, IPS, Capacity Planning, Monitoring, Backup/DR, Proxmox và những bài học sau cutover.">
   <meta name="author" content="Vo Thanh Sang">
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
-  <link rel="canonical" href="https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026.html">
+  <link rel="canonical" href="https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026">
   <meta property="og:title" content="Một vài dấu mốc Infrastructure 2023–2026">
   <meta property="og:description" content="Một vài project về Network, Security, Monitoring, Recovery và những bài học còn ở lại sau cutover, failover và migration.">
   <meta property="og:type" content="article">
-  <meta property="og:url" content="https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026.html">
+  <meta property="og:url" content="https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026">
   <meta property="og:site_name" content="Vo Thanh Sang">
   <meta property="og:locale" content="vi_VN">
   <meta property="og:image" content="https://sangvo.me/assets/blog/og-card.png">
@@ -19,7 +19,7 @@
   <meta property="article:published_time" content="2026-08-26T00:00:00+07:00"><meta property="article:modified_time" content="2026-09-07T13:05:00+07:00"><meta property="article:author" content="Vo Thanh Sang"><meta property="article:section" content="Infrastructure"><meta property="article:tag" content="Infrastructure"><meta property="article:tag" content="Network Security"><meta property="article:tag" content="Monitoring"><meta property="article:tag" content="Disaster Recovery"><meta property="article:tag" content="Proxmox">
   <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Infrastructure Projects 2023–2026"><meta name="twitter:description" content="Network, Security, Monitoring, Recovery và những bài học còn lại sau các project Infrastructure."><meta name="twitter:image" content="https://sangvo.me/assets/blog/og-card.png">
   <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../../assets/style.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026.html#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026.html"},"headline":"Một vài dấu mốc Infrastructure 2023–2026","description":"Nhìn lại các project Network, Security, Monitoring, Recovery và Infrastructure từ 2023 đến 2026.","image":"https://sangvo.me/assets/blog/og-card.png","datePublished":"2026-08-26T00:00:00+07:00","dateModified":"2026-09-07T13:05:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["Enterprise Infrastructure","Network Security","Firewall Migration","Monitoring","Disaster Recovery","Proxmox","Infrastructure Projects"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-08-26-engineering-journey-2023-2026"},"headline":"Một vài dấu mốc Infrastructure 2023–2026","description":"Nhìn lại các project Network, Security, Monitoring, Recovery và Infrastructure từ 2023 đến 2026.","image":"https://sangvo.me/assets/blog/og-card.png","datePublished":"2026-08-26T00:00:00+07:00","dateModified":"2026-09-07T13:05:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["Enterprise Infrastructure","Network Security","Firewall Migration","Monitoring","Disaster Recovery","Proxmox","Infrastructure Projects"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
 </head>
 <body>
 <nav><div class="wrap"><div class="brand"><a href="/index.html"><img src="/assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="/index.html#about">About</a><a href="/projects/index.html">Case Studies</a><a href="/blog/index.html">Engineering Notes</a><a href="/index.html#career">Career Journey</a></div></div></nav>
@@ -52,7 +52,7 @@
   <p>Peplink làm mình nhớ đến rollback. Palo Alto nhắc mình phải đi hết đến service validation. FortiGate và IPS cho thấy Security phải nhìn theo traffic path. Capacity Assessment kéo câu chuyện từ performance sang lifecycle. Monitoring và Backup lại buộc mình kiểm tra xem trạng thái “xanh” có thật sự đại diện cho khả năng vận hành hay không.</p>
   <p>Vendor và công nghệ vẫn quan trọng vì đó là công cụ mình dùng mỗi ngày. Nhưng nếu phải chọn thứ còn ở lại lâu hơn sau một project, mình chọn cách đặt câu hỏi về dependency, failure, validation và recovery.</p>
   <p>Những project trong bài chỉ là vài dấu mốc gần đây. Mỗi cái còn nhiều chi tiết riêng, và một số câu chuyện mình đã tách thành các bài riêng để viết kỹ hơn.</p>
-  <div class="article-signoff"><p>Ghi lại từ những trải nghiệm thực tế của mình trong quá trình làm Infrastructure — những câu chuyện vẫn còn tiếp tục.</p><a href="2026-08-25-building-a-practical-enterprise-noc.html">Đọc tiếp: Xây dựng Enterprise NOC thực dụng →</a></div>
+  <div class="article-signoff"><p>Ghi lại từ những trải nghiệm thực tế của mình trong quá trình làm Infrastructure — những câu chuyện vẫn còn tiếp tục.</p><a href="2026-08-25-building-a-practical-enterprise-noc">Đọc tiếp: Xây dựng Enterprise NOC thực dụng →</a></div>
 </article></main>
 <footer><div class="wrap"><a href="/blog/" style="color:inherit;text-decoration:none">© 2026 Vo Thanh Sang • All rights reserved.</a></div></footer>
 <script src="/assets/image-lightbox.js"></script>
