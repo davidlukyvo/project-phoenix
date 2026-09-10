@@ -16,7 +16,7 @@
   <meta property="og:image" content="https://sangvo.me/assets/blog/sgd-portal-content-to-access-architecture.png">
   <meta property="og:image:alt" content="SGD Portal Content-to-Access Architecture với SharePoint, AWS, Cognito và Microsoft Entra ID">
   <meta property="article:published_time" content="2026-09-07T00:00:00+07:00">
-  <meta property="article:modified_time" content="2026-09-07T13:05:00+07:00">
+  <meta property="article:modified_time" content="2026-09-10T11:44:00+07:00">
   <meta property="article:author" content="Vo Thanh Sang">
   <meta property="article:section" content="Cloud & Identity">
   <meta property="article:tag" content="AWS"><meta property="article:tag" content="Microsoft Entra ID"><meta property="article:tag" content="SharePoint"><meta property="article:tag" content="CloudFront"><meta property="article:tag" content="Cognito"><meta property="article:tag" content="Deployment Automation">
@@ -36,7 +36,7 @@
     "description":"Case Study về SharePoint, AWS S3 private, CloudFront, Cognito, Lambda@Edge, Microsoft Entra ID và deployment automation.",
     "image":"https://sangvo.me/assets/blog/sgd-portal-content-to-access-architecture.png",
     "datePublished":"2026-09-07T00:00:00+07:00",
-    "dateModified":"2026-09-07T13:05:00+07:00",
+    "dateModified":"2026-09-10T11:44:00+07:00",
     "inLanguage":"vi-VN",
     "author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},
     "publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},
@@ -73,7 +73,7 @@
 
   <h2>Lúc đầu, architecture thực ra khá ngắn</h2>
   <p>Nếu chỉ nhìn bài toán ban đầu, luồng có thể hình dung khá đơn giản: business chuẩn bị nội dung trên SharePoint, deploy host lấy bundle xuống, đưa lên S3 rồi CloudFront phân phối cho người dùng.</p>
-  <figure class="article-figure"><img src="/assets/blog/sgd-portal-initial-content-to-delivery.svg?v=20260907" alt="Version đầu của SGD Portal: Content-to-Delivery từ Business, SharePoint, Deploy Host, Amazon S3, CloudFront đến User"><figcaption>Version đầu — khi bài toán chủ yếu vẫn là đưa một published bundle từ SharePoint lên AWS.</figcaption></figure>
+  <figure class="article-figure"><img src="/assets/blog/sgd-portal-initial-content-to-delivery.png?v=20260910" alt="Version đầu của SGD Portal: Content-to-Delivery từ Business, SharePoint, Deploy Host, Amazon S3, CloudFront đến User"><figcaption>Version đầu — khi bài toán chủ yếu vẫn là đưa một published bundle từ SharePoint lên AWS.</figcaption></figure>
   <p>Ở thời điểm đó, câu chuyện vẫn khá gần với một static website thông thường.</p>
   <p>Nhưng khi bắt đầu nghĩ đến cách hệ thống sẽ được vận hành sau go-live, mình nhận ra một câu hỏi quan trọng hơn việc chọn AWS service nào:</p>
   <div class="decision-note"><strong>Ai nên chịu trách nhiệm cho việc gì?</strong></div>
