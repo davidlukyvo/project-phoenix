@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Move SAP từ On-Prem lên AWS | Cloud Migration | Vo Thanh Sang</title>
+<meta name="description" content="Ghi chép từ một project 2023 đưa hệ thống SAP từ On-Prem lên AWS: vai trò Infra/Network, dependency, security boundary, service validation và bài học sau migration.">
+<meta name="author" content="Vo Thanh Sang">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<link rel="canonical" href="https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration">
+<meta property="og:title" content="Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud">
+<meta property="og:description" content="Vendor có thể dựng cloud resource. Infra vẫn phải hiểu dependency, network path, security boundary và cách chứng minh service thực sự hoạt động sau migration.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration">
+<meta property="og:site_name" content="Vo Thanh Sang">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:image" content="https://sangvo.me/assets/blog/og-card.png">
+<meta property="og:image:alt" content="Vo Thanh Sang Engineering Notes">
+<meta property="article:published_time" content="2026-09-22T00:00:00+07:00">
+<meta property="article:modified_time" content="2026-09-22T00:00:00+07:00">
+<meta property="article:author" content="Vo Thanh Sang">
+<meta property="article:section" content="Migration & Change">
+<meta property="article:tag" content="SAP"><meta property="article:tag" content="AWS"><meta property="article:tag" content="Cloud Migration"><meta property="article:tag" content="Infrastructure"><meta property="article:tag" content="Network">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud">
+<meta name="twitter:description" content="Một project 2023 nhìn từ phía Infra/Network: dependency, connectivity, security boundary, validation và cutover.">
+<meta name="twitter:image" content="https://sangvo.me/assets/blog/og-card.png">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration"},"headline":"Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud","description":"Ghi chép từ một project 2023 đưa hệ thống SAP từ On-Prem lên AWS: vai trò Infra/Network, dependency, security boundary, service validation và bài học sau migration.","image":"https://sangvo.me/assets/blog/og-card.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["SAP","AWS","Cloud Migration","Enterprise Infrastructure","Network","EKS","RDS","Disaster Recovery"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
+<style>
+.article>p:not(.subtitle),.article .article-signoff p{text-align:justify;text-justify:inter-word}
+.context-note,.lesson{margin:30px 0;padding:20px 22px;border-radius:12px}
+.context-note{background:#f5f8fc;border-left:5px solid #173f8a}
+.lesson{font-size:1.04rem;font-weight:700;color:#102847;border-top:1px solid #d9e1eb;border-bottom:1px solid #d9e1eb;border-radius:0}
+.flow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:22px 0}.flow span{padding:9px 12px;border:1px solid #dce5ef;border-radius:999px;background:#f8fafc;font-weight:750;color:#344054}.flow b{color:#2563eb}
+.role-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:24px 0 34px}.role-card{border:1px solid #dce5ef;border-radius:12px;padding:18px;background:#fff}.role-card h3{font-size:1rem;margin:0 0 10px}.role-card p{margin:0;color:#566579;line-height:1.6;text-align:left!important}
+.article-tags{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 14px}.article-tags span{display:inline-flex;padding:7px 10px;border-radius:999px;background:#f3f6fa;border:1px solid #dce5ef;color:#344054;font-size:.85rem;font-weight:700}.article-author{margin:0 0 30px;color:#667085;font-size:.92rem}.article-author a{font-weight:700}
+@media(max-width:820px){.article>p:not(.subtitle),.article .article-signoff p{text-align:left}.role-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><div class="brand"><a href="/"><img src="/assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="/#about">About</a><a href="/projects/">Case Studies</a><a href="/blog/">Engineering Notes</a><a href="/#career">Career Journey</a></div></div></nav>
+<main><section><article class="article">
+<div class="kicker">Field Notes • AWS / Migration • Project 2023</div>
+<h1>Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud</h1>
+<p class="subtitle">Năm 2023, mình tham gia một project đưa toàn bộ hệ thống SAP từ hạ tầng On-Prem lên AWS cùng đối tác triển khai. Vendor phụ trách phần cloud platform và application stack; mình phụ trách phía Infrastructure/Network — connectivity, security boundary, dependency và validation để hệ thống sau migration thực sự vận hành được.</p>
+<div class="article-tags"><span>SAP</span><span>AWS</span><span>Cloud Migration</span><span>Infrastructure</span><span>Network</span><span>Validation</span></div>
+<div class="article-author">By <a href="/#about">Vo Thanh Sang</a> · Senior Infrastructure Engineer</div>
+
+<p>Có những project nhìn trên sơ đồ khá đơn giản.</p>
+<div class="flow"><span>On-Prem</span><b>→</b><span>AWS</span></div>
+<p>Nhưng khi bắt đầu làm thật, phần khó không nằm ở mũi tên.</p>
+<p>Nó nằm ở tất cả những thứ đang nối với hệ thống trước khi mũi tên đó được vẽ: network, DNS, firewall, database, middleware, access, monitoring và những dependency mà đôi khi chỉ lộ ra khi một service không còn đi theo đường cũ.</p>
+<div class="context-note"><strong>Cloud Migration không kết thúc khi resource đã xuất hiện trên AWS. Với mình, nó chỉ kết thúc khi service phía sau resource đó được kiểm chứng.</strong></div>
+
+<h2>Vai trò của mình trong project</h2>
+<p>Đây là project có đối tác triển khai. Vì vậy mình không muốn kể lại theo cách làm như thể mình tự tay build toàn bộ EKS, Jenkins, RDS hay Redis.</p>
+<p>Vendor phụ trách phần cloud platform và application stack. Phía mình phụ trách Infrastructure/Network, phối hợp những phần liên quan đến connectivity, access path, security boundary, dependency, cutover và validation.</p>
+
+<div class="role-grid">
+  <div class="role-card"><h3>Vendor / Cloud Platform</h3><p>AWS resource, EKS, application deployment, Jenkins, RDS, Redis, S3, CloudWatch và các bước triển khai theo scope.</p></div>
+  <div class="role-card"><h3>Infrastructure / Network</h3><p>Connectivity, routing path, firewall/security boundary, DNS, access, dependency, cutover readiness và service validation.</p></div>
+  <div class="role-card"><h3>Application Team</h3><p>Application configuration, endpoint, functional validation và xác nhận các service SAP liên quan hoạt động đúng sau migration.</p></div>
+</div>
+
+<p>Ranh giới trách nhiệm này khá quan trọng. Vendor có thể nói resource đã tạo xong. Infra có thể nói network đã thông. App team có thể nói process đã chạy.</p>
+<p>Nhưng business chỉ nhìn một kết quả: <strong>SAP có sử dụng được hay không.</strong></p>
+
+<h2>Cloud Migration không bắt đầu ở AWS Console</h2>
+<p>Trước khi nói tới EKS hay RDS, mình quan tâm tới dependency.</p>
+<p>User đang đi vào hệ thống bằng đường nào? Application nào còn gọi resource On-Prem? DNS nào sẽ đổi? Firewall cần cho phép những source/destination nào? Khi một endpoint thay đổi, component nào phía sau còn đang giữ cấu hình cũ?</p>
+<p>Tài liệu triển khai lúc đó khá chi tiết ở phía AWS: VPC, public/private subnet, route table, NAT, S3 VPC Endpoint, security group, EKS, RDS, Redis, S3 và CloudWatch đều có trình tự cấu hình riêng. Nhưng từ góc nhìn Infra, các resource đó chỉ thực sự có ý nghĩa khi đặt lại vào service path.</p>
+<div class="flow"><span>User / Client</span><b>→</b><span>DNS</span><b>→</b><span>Network / Security</span><b>→</b><span>Load Balancer</span><b>→</b><span>Application</span><b>→</b><span>Data Services</span></div>
+<p>Đó là lý do dependency discovery thường có giá trị hơn việc thuộc vị trí từng menu trong AWS Console.</p>
+
+<h2>Hai Availability Zone chưa chắc đã loại bỏ mọi dependency</h2>
+<p>Kiến trúc cloud thường nhìn rất đẹp khi có hai Availability Zone, public subnet và private subnet tách rõ.</p>
+<p>Đó là nền tảng đúng. Nhưng Infra vẫn phải nhìn traffic path phía sau.</p>
+<p>Nếu nhiều private subnet vẫn phụ thuộc vào cùng một egress path, nếu database chỉ có một active instance, hoặc một middleware duy nhất vẫn đứng giữa application và dependency khác, thì việc đếm subnet chưa đủ để kết luận về availability.</p>
+<div class="lesson">Redundancy phải nhìn theo đường đi của service, không chỉ đếm số lượng subnet hay node.</div>
+
+<h2>EKS Active chưa có nghĩa SAP đã sẵn sàng</h2>
+<p>Phần EKS trong project được triển khai bằng <code>eksctl</code>, có worker node, namespace, EBS CSI và AWS Load Balancer Controller. Front-end, back-end và Jenkins được triển khai lên cluster; ALB và target group được dùng để đưa traffic tới workload.</p>
+<p>Nhưng mình không muốn dừng validation ở trạng thái <code>ACTIVE</code>, <code>Ready</code> hay <code>Running</code>.</p>
+<p>Pod chạy chưa chắc application đọc được database. ALB tồn tại chưa chắc target healthy. Target healthy chưa chắc user thực hiện được transaction thật.</p>
+<p>Một chi tiết mình thấy có giá trị trong tài liệu triển khai là việc kiểm tra target group và health-check path của application sau khi ingress được tạo. Nó nhắc đúng một điều: <strong>resource health và service health là hai lớp kiểm chứng khác nhau.</strong></p>
+
+<h2>Migration dễ thất bại ở những dependency không nằm trên diagram</h2>
+<p>Một hệ thống tồn tại đủ lâu thường có những dependency không còn nằm trong architecture diagram mới nhất.</p>
+<p>Một endpoint được hard-code. Một firewall rule từ nhiều năm trước. Một batch job chạy ở giờ ít ai để ý. Một middleware vẫn đang gọi sang môi trường cũ. Một DNS record mà mọi người tưởng đã không còn dùng.</p>
+<p>Vì vậy mình thích dependency được biến thành checklist có owner và validation method, thay vì để nó nằm trong trí nhớ của từng engineer.</p>
+<div class="flow"><span>Source</span><b>→</b><span>Destination</span><b>→</b><span>Port / Protocol</span><b>→</b><span>Owner</span><b>→</b><span>Validation</span><b>→</b><span>Rollback impact</span></div>
+<p>Nếu một dependency chỉ được phát hiện trong cutover window thì lúc đó nó không còn là discovery nữa. Nó đã trở thành downtime.</p>
+
+<h2>Vendor triển khai không có nghĩa Infra đứng ngoài</h2>
+<p>Trong project có vendor, mình thấy dễ có một hiểu nhầm: phần nào vendor triển khai thì Infra chỉ cần chờ bàn giao.</p>
+<p>Thực tế thì ngược lại.</p>
+<p>Infra phải hiểu đủ kiến trúc để đặt câu hỏi đúng: traffic đi qua đâu, security group/firewall nào đang quyết định kết nối, ALB đang health-check gì, data service nằm private hay public, DNS đổi ở thời điểm nào và nếu validation fail thì service quay về đường cũ bằng cách nào.</p>
+<div class="lesson">Vendor có thể bàn giao resource. Infra vẫn phải giúp chứng minh resource đó đã trở thành một service dùng được.</div>
+
+<h2>IAM và access cũng là một phần của migration</h2>
+<p>Tài liệu 2023 dùng IAM user, access key, managed policy và inline policy để phục vụ triển khai. Đây là cách làm khá quen thuộc ở thời điểm đó, đặc biệt trong những project cần hoàn thành nhanh và có nhiều công cụ CLI/API tham gia.</p>
+<p>Nhưng bài học mình giữ lại không phải tên policy nào đã được gán.</p>
+<p>Nó là việc phải tách được quyền của human administrator, automation và application workload. Nếu một pipeline chỉ chạy được sau khi role phía dưới được mở rất rộng, migration có thể thành công nhưng steady-state security lại trở thành việc phải xử lý sau go-live.</p>
+<p>Đó là lý do mình xem access review là một phần của handover, không phải một việc hoàn toàn tách khỏi migration.</p>
+
+<h2>Restore database chưa phải service recovery</h2>
+<p>RDS PostgreSQL được restore từ snapshot và đặt private, không public trực tiếp ra Internet. Redis cũng được phục hồi từ backup trong S3.</p>
+<p>Nhưng với application, trạng thái <code>Available</code> của database không phải kết luận cuối cùng.</p>
+<p>Mình vẫn cần nhìn tiếp: application resolve đúng endpoint chưa, credential có đúng không, connection từ application tới data service có thông không, data có đủ mới cho cutover không, và sau khi đổi môi trường thì monitoring/backup có quay lại trạng thái bình thường không.</p>
+<p>Infrastructure nói “database đã lên” và application nói “SAP chưa chạy” hoàn toàn có thể cùng đúng — vì hai bên đang đo hai layer khác nhau.</p>
+
+<h2>Configuration cho migration chưa chắc phù hợp với steady state</h2>
+<p>Một số lựa chọn trong giai đoạn build hoặc test có thể hợp lý để rút ngắn thời gian triển khai: quyền rộng hơn tạm thời, log giữ lâu để troubleshoot, một số HA/backup control chưa bật ngay, hoặc endpoint được cập nhật thủ công.</p>
+<p>Nhưng nếu workload đã chuyển sang production, mình muốn có một vòng review khác.</p>
+<p>Câu hỏi lúc đó không còn là “migration có chạy không?” mà là “môi trường mới đã đủ an toàn và đủ dễ vận hành trong nhiều tháng tiếp theo chưa?”.</p>
+<div class="lesson">Configuration phù hợp cho migration chưa chắc phù hợp cho steady-state operation.</div>
+
+<h2>Cutover không phải khoảnh khắc duy nhất cần chuẩn bị</h2>
+<p>Mình thường chia migration thành ba đoạn.</p>
+<p><strong>Trước cutover:</strong> dependency, backup/snapshot, DNS readiness, firewall/routing, access, monitoring, validation checklist và rollback path.</p>
+<p><strong>Trong cutover:</strong> network reachability, application-to-database connectivity, workload health, ALB target health, DNS, critical transaction và lỗi log.</p>
+<p><strong>Sau cutover:</strong> user validation, performance, monitoring, backup, security review và theo dõi xem còn dependency nào đang quay về On-Prem.</p>
+<p>Và chỉ sau giai đoạn cuối mình mới thấy có cơ sở để trả lời câu hỏi:</p>
+<div class="context-note"><strong>Khi nào môi trường On-Prem cũ thực sự không còn cần thiết nữa?</strong></div>
+
+<h2>Nếu nhìn lại project 2023 hôm nay</h2>
+<p>Mình không muốn dùng tiêu chuẩn của vài năm sau để nói rằng implementation thời điểm đó “sai”. AWS, Kubernetes và security practice thay đổi khá nhanh.</p>
+<p>Điều đáng giữ lại là cách nhìn: mỗi thay đổi platform đều phải đi kèm dependency validation, access review và service validation.</p>
+<p>Nếu làm lại một project tương tự, mình sẽ muốn nhiều thành phần được khai báo và kiểm chứng bằng code hơn, ít phụ thuộc vào thao tác console và endpoint thủ công hơn, đồng thời tách rõ identity của human, pipeline và workload.</p>
+<p>Nhưng phần không thay đổi vẫn là câu hỏi cũ:</p>
+<div class="context-note"><strong>Sau khi move workload sang nơi mới, mình có bằng chứng gì rằng business service thực sự chạy đúng?</strong></div>
+
+<h2>Điều mình giữ lại</h2>
+<p>Trước những project kiểu này, Cloud Migration dễ được hiểu đơn giản là đưa workload từ A sang B.</p>
+<p>Sau project, cách mình nhìn khác đi một chút.</p>
+<p><strong>Migration thật sự là di chuyển dependency mà không làm mất service.</strong></p>
+<p>Vendor có thể triển khai AWS resource. Application team có thể triển khai code. Infra/Network phải giúp nối những phần đó thành một service path có thể kiểm chứng.</p>
+<p>Với mình, migration chỉ kết thúc khi câu hỏi cuối cùng được trả lời bằng validation thay vì cảm giác:</p>
+<div class="lesson">Hệ thống đã thực sự sẵn sàng để business sử dụng chưa?</div>
+
+<div class="article-signoff"><p>Ghi lại từ project mình tham gia năm 2023 ở vai trò Infrastructure/Network — những bài học vẫn còn hữu ích khi nhìn lại các migration sau này.</p><a href="2026-08-26-migration-does-not-start-at-cutover">Đọc tiếp → Migration không bắt đầu ở Cutover</a></div>
+</article></section></main>
+<footer><div class="wrap"><a href="/blog/" style="color:inherit;text-decoration:none">© 2026 Vo Thanh Sang • All rights reserved.</a></div></footer>
+</body></html>
