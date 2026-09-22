@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HRIS là Source of Truth | Identity Governance | Vo Thanh Sang</title>
-<meta name="description" content="Engineering Note về HRIS, Active Directory và Identity Governance: detect trước, kiểm chứng rule, quản lý exception và chỉ remediation khi đủ an toàn.">
+<title>HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory | Vo Thanh Sang</title>
+<meta name="description" content="Khi HRIS và Active Directory không khớp nhau, vấn đề không chỉ là bên nào đúng mà là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.">
 <meta name="author" content="Vo Thanh Sang">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate">
-<meta property="og:title" content="HRIS là Source of Truth, nhưng không có nghĩa là được phép sửa AD ngay">
-<meta property="og:description" content="Source of Truth không đồng nghĩa với Write Authority. Detect trước, validate từng rule và chỉ remediation khi đủ an toàn.">
+<meta property="og:title" content="HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory">
+<meta property="og:description" content="Khi HRIS và Active Directory không khớp nhau, vấn đề không chỉ là bên nào đúng mà là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate">
 <meta property="og:site_name" content="Vo Thanh Sang">
@@ -22,12 +22,12 @@
 <meta property="article:section" content="Identity & Microsoft">
 <meta property="article:tag" content="HRIS"><meta property="article:tag" content="Active Directory"><meta property="article:tag" content="Microsoft Entra ID"><meta property="article:tag" content="Identity Governance"><meta property="article:tag" content="Automation">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="HRIS là Source of Truth, nhưng chưa phải Write Authority">
-<meta name="twitter:description" content="Detect trước, validate từng rule và chỉ remediation khi đủ điều kiện.">
+<meta name="twitter:title" content="HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory">
+<meta name="twitter:description" content="Vấn đề không chỉ là bên nào đúng. Quan trọng hơn là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.">
 <meta name="twitter:image" content="https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/style.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate"},"headline":"HRIS là Source of Truth, nhưng không có nghĩa là được phép sửa AD ngay","description":"Engineering Note về HRIS, Active Directory và Identity Governance: detect trước, validate từng rule và chỉ remediation khi đủ an toàn.","image":"https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["HRIS","Active Directory","Microsoft Entra ID","Identity Governance","Detect-only","Automation","Remediation"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate"},"headline":"HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory","description":"Khi HRIS và Active Directory không khớp nhau, vấn đề không chỉ là bên nào đúng mà là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.","image":"https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["HRIS","Active Directory","Microsoft Entra ID","Identity Governance","Detect-only","Automation","Remediation"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
 <style>
 .article>p:not(.subtitle),.article .article-signoff p{text-align:justify;text-justify:inter-word}
 .decision-note{margin:30px 0;padding:22px 24px;border-left:5px solid #173f8a;background:#f5f8fc;border-radius:0 14px 14px 0}
@@ -42,8 +42,8 @@
 <nav><div class="wrap"><div class="brand"><a href="/"><img src="/assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="/#about">About</a><a href="/projects/">Case Studies</a><a href="/blog/">Engineering Notes</a><a href="/#career">Career Journey</a></div></div></nav>
 <main><section><article class="article">
 <div class="kicker">Engineering Note • Identity & Microsoft • 2026</div>
-<h1>HRIS là Source of Truth, nhưng không có nghĩa là được phép sửa AD ngay</h1>
-<p class="subtitle">Khi HRIS và Active Directory không khớp nhau, câu hỏi đầu tiên không phải là sửa thế nào. Câu hỏi đầu tiên là liệu automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.</p>
+<h1>HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory</h1>
+<p class="subtitle">Khi dữ liệu HRIS và Active Directory không khớp nhau, vấn đề không chỉ là xác định bên nào đúng. Quan trọng hơn là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.</p>
 <div class="article-tags"><span>HRIS</span><span>Active Directory</span><span>Entra ID</span><span>Identity Governance</span><span>Automation</span><span>Detect-only</span></div>
 
 <p>Có một bài toán nhìn qua khá đơn giản.</p>
