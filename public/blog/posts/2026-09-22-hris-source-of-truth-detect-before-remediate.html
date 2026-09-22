@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HRIS là Source of Truth | Identity Governance | Vo Thanh Sang</title>
+<meta name="description" content="Engineering Note về HRIS, Active Directory và Identity Governance: detect trước, kiểm chứng rule, quản lý exception và chỉ remediation khi đủ an toàn.">
+<meta name="author" content="Vo Thanh Sang">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<link rel="canonical" href="https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate">
+<meta property="og:title" content="HRIS là Source of Truth, nhưng không có nghĩa là được phép sửa AD ngay">
+<meta property="og:description" content="Source of Truth không đồng nghĩa với Write Authority. Detect trước, validate từng rule và chỉ remediation khi đủ an toàn.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate">
+<meta property="og:site_name" content="Vo Thanh Sang">
+<meta property="og:locale" content="vi_VN">
+<meta property="og:image" content="https://sangvo.me/assets/blog/og-card.png">
+<meta property="og:image:alt" content="Engineering Notes by Vo Thanh Sang">
+<meta property="article:published_time" content="2026-09-22T00:00:00+07:00">
+<meta property="article:modified_time" content="2026-09-22T00:00:00+07:00">
+<meta property="article:author" content="Vo Thanh Sang">
+<meta property="article:section" content="Identity & Microsoft">
+<meta property="article:tag" content="HRIS"><meta property="article:tag" content="Active Directory"><meta property="article:tag" content="Microsoft Entra ID"><meta property="article:tag" content="Identity Governance"><meta property="article:tag" content="Automation">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HRIS là Source of Truth, nhưng chưa phải Write Authority">
+<meta name="twitter:description" content="Detect trước, validate từng rule và chỉ remediation khi đủ điều kiện.">
+<meta name="twitter:image" content="https://sangvo.me/assets/blog/og-card.png">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/assets/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate"},"headline":"HRIS là Source of Truth, nhưng không có nghĩa là được phép sửa AD ngay","description":"Engineering Note về HRIS, Active Directory và Identity Governance: detect trước, validate từng rule và chỉ remediation khi đủ an toàn.","image":"https://sangvo.me/assets/blog/og-card.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["HRIS","Active Directory","Microsoft Entra ID","Identity Governance","Detect-only","Automation","Remediation"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
+<style>
+.article>p:not(.subtitle),.article .article-signoff p{text-align:justify;text-justify:inter-word}
+.decision-note{margin:30px 0;padding:22px 24px;border-left:5px solid #173f8a;background:#f5f8fc;border-radius:0 14px 14px 0}
+.lesson{font-size:1.06rem;font-weight:700;color:#102847;margin:30px 0;padding:18px 20px;border-top:1px solid #d9e1eb;border-bottom:1px solid #d9e1eb}
+.flow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:22px 0}.flow span{padding:9px 12px;border:1px solid #dce5ef;border-radius:999px;background:#f8fafc;font-weight:750;color:#344054}.flow b{color:#2563eb}
+.article figure.article-figure{width:min(1180px,100%)!important;max-width:1180px!important;margin:34px auto 42px!important}.article figure.article-figure img{display:block;width:100%!important;height:auto;margin:0 auto;border-radius:14px;box-shadow:0 10px 28px rgba(24,48,86,.08);cursor:zoom-in;background:#fff}.article figure.article-figure figcaption{text-align:center;color:#66788a;font-size:.9rem;line-height:1.55;margin:10px auto 0;max-width:980px}
+.article-tags{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 30px}.article-tags span{display:inline-flex;padding:7px 10px;border-radius:999px;background:#f3f6fa;border:1px solid #dce5ef;color:#344054;font-size:.85rem;font-weight:700}
+@media(max-width:820px){.article>p:not(.subtitle),.article .article-signoff p{text-align:left}.article figure.article-figure figcaption{text-align:left}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><div class="brand"><a href="/"><img src="/assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="/#about">About</a><a href="/projects/">Case Studies</a><a href="/blog/">Engineering Notes</a><a href="/#career">Career Journey</a></div></div></nav>
+<main><section><article class="article">
+<div class="kicker">Engineering Note • Identity & Microsoft • 2026</div>
+<h1>HRIS là Source of Truth, nhưng không có nghĩa là được phép sửa AD ngay</h1>
+<p class="subtitle">Khi HRIS và Active Directory không khớp nhau, câu hỏi đầu tiên không phải là sửa thế nào. Câu hỏi đầu tiên là liệu automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.</p>
+<div class="article-tags"><span>HRIS</span><span>Active Directory</span><span>Entra ID</span><span>Identity Governance</span><span>Automation</span><span>Detect-only</span></div>
+
+<p>Có một bài toán nhìn qua khá đơn giản.</p>
+<p>HRIS có thông tin nhân viên. Active Directory cũng có thông tin nhân viên. Một số application lại cần Manager, Job Title, Employee ID và các thuộc tính identity khác để hiển thị hoặc phân quyền đúng.</p>
+<p>Nếu HRIS là nguồn dữ liệu chính thức, cách tự nhiên nhất có vẻ là:</p>
+<div class="flow"><span>HRIS thay đổi</span><b>→</b><span>AD tự động thay đổi theo</span></div>
+<p>Về mặt kỹ thuật, làm như vậy không khó.</p>
+<p>Nhưng mình không muốn bắt đầu ở đó.</p>
+<p>Câu hỏi đầu tiên không phải là <strong>“Làm sao sync HRIS sang AD?”</strong></p>
+<div class="decision-note"><strong>Mình đã đủ chắc để cho dữ liệu từ một hệ thống tự động thay đổi identity production chưa?</strong></div>
+
+<h2>Source of Truth không đồng nghĩa với Write Authority</h2>
+<p>HRIS có thể là authoritative source cho Employee ID, Manager, Title, trạng thái nhân sự hoặc một số thuộc tính tổ chức. Khi hai hệ thống không khớp, đó là nơi mình quay lại để đối chiếu.</p>
+<p>Nhưng điều đó chưa tự động dẫn đến kết luận rằng một integration được phép viết trực tiếp vào Active Directory.</p>
+<p><strong>Source of Truth</strong> trả lời: dữ liệu nào được xem là đúng.</p>
+<p><strong>Write Authority</strong> trả lời: thành phần nào được phép thay đổi production identity.</p>
+<p>Nếu gộp hai câu hỏi thành một, architecture rất dễ đi thẳng từ HRIS sang AD write-back. Nhanh, gọn, nhưng cũng tạo ra một đường thay đổi khá mạnh. Một record sai ở source, một mapping sai hoặc một identity match nhầm có thể trở thành production change trước khi con người kịp nhìn thấy.</p>
+<div class="lesson">Source of Truth cho biết mình nên tin dữ liệu ở đâu. Nó không tự động cấp quyền Write.</div>
+
+<h2>Đầu tiên chỉ đọc</h2>
+<p>Luồng đầu tiên mình thích là một chiều: <strong>HRIS → Middleware → Consumer</strong>. Middleware đọc dữ liệu cần thiết từ HRIS, normalize và transform, nhưng không thay đổi ngược về HRIS. Consumer cũng không trở thành một nơi khác để business sửa dữ liệu nhân sự.</p>
+<p>HR vẫn sở hữu dữ liệu nhân sự. Integration chỉ đọc và đối chiếu. Active Directory chưa bị thay đổi chỉ vì hệ thống phát hiện ra một difference.</p>
+<p>Ở bước này, mismatch vẫn chỉ là một <strong>observation</strong>. Nó chưa phải là một <strong>change</strong>.</p>
+
+<h2>Detect trước, Remediate sau</h2>
+<p>Khi bắt đầu so HRIS với AD, sẽ xuất hiện những trường hợp như Manager khác nhau, Title chưa cập nhật, Employee ID thiếu hoặc một identity không map được chắc chắn với employee record.</p>
+<p>Nếu automation ngay lập tức sửa mọi difference, mình sẽ mất đi một giai đoạn rất có giá trị: giai đoạn nhìn xem rule của mình có thật sự đúng không.</p>
+<div class="flow"><span>Detect</span><b>→</b><span>Review</span><b>→</b><span>Remediate khi đủ điều kiện</span></div>
+<p>Trong detect-only mode, hệ thống có thể nói: HRIS đang nói A, AD đang nói B, hai bên không giống nhau. Nhưng nó chưa tự quyết định rằng AD phải trở thành A.</p>
+<p>Chính giai đoạn này giúp lộ ra những case mà một câu query đơn giản không nói được: account không map an toàn, một record là intentional exception, identifier chưa đủ chắc hoặc context business nằm ngoài thứ automation nhìn thấy.</p>
+
+<figure class="article-figure"><img src="/assets/blog/hris-source-of-truth-detect-remediate.svg?v=20260922" alt="Identity Governance từ HRIS Source of Truth qua middleware và reconciliation, tách thành Detect-only hoặc Controlled Remediation trước Active Directory và Entra ID"><figcaption>Detect-only và Controlled Remediation là hai outcome khác nhau. Không phải mọi mismatch đều phải đi đến write-back.</figcaption></figure>
+
+<h2>Detect-only không phải trạng thái tạm</h2>
+<p>Một cách rất dễ hình dung automation là Detect → Review → Remediate. Nhưng flow đó không có nghĩa mọi rule cuối cùng đều phải đi tới remediation.</p>
+<p>Có những mismatch có logic đủ rõ, identifier đủ chắc và mức ảnh hưởng đủ kiểm soát để automation có thể sửa.</p>
+<p>Cũng có những nhóm dữ liệu mà giá trị lớn nhất của hệ thống chỉ là <strong>phát hiện → cảnh báo → đưa cho đúng người review</strong>.</p>
+<p>Một thuộc tính có nhiều business exception, phụ thuộc context mà hệ thống không nhìn thấy hoặc có downstream impact khó dự đoán thì detect-only có thể là trạng thái vận hành lâu dài — không phải một phiên bản “chưa hoàn thiện” của automation.</p>
+<div class="lesson">Automation không trưởng thành hơn chỉ vì nó được cấp quyền Write.</div>
+<p>Một rule detect-only nhưng phát hiện đúng, ít false positive, có owner rõ và tạo ra signal hữu ích có thể giá trị hơn một rule tự remediation nhưng phải dựa trên quá nhiều assumption.</p>
+<p>Vì vậy remediation không phải destination mặc định. Nó chỉ là một trong các outcome sau detection.</p>
+
+<h2>Match được chưa chắc đã được phép sửa</h2>
+<p>Một employee record có thể chứa employee code, corporate email, manager, title và các thông tin tổ chức khác. AD cũng có UPN, mail, Employee ID và account metadata.</p>
+<p>Nếu chỉ cần “tìm một account trông giống người này”, việc match khá dễ. Nhưng tiêu chuẩn để <strong>thay đổi account</strong> nên cao hơn tiêu chuẩn để <strong>hiển thị một candidate match</strong>.</p>
+<p>Với detect-only, mình có thể chấp nhận mức confidence thấp hơn và flag record để review. Với remediation, mình muốn chắc hơn nhiều.</p>
+<p>Một mapping sai trên portal là lỗi dữ liệu. Một automation sửa nhầm Manager hoặc thuộc tính identity trong AD có thể tiếp tục đi qua Entra ID và ảnh hưởng những hệ thống khác.</p>
+<p>Phạm vi ảnh hưởng đã khác.</p>
+
+<h2>Exception không phải lúc nào cũng là lỗi</h2>
+<p>Một automation rất dễ rơi vào giả định: nếu dữ liệu không đúng rule thì dữ liệu đang sai.</p>
+<p>Thực tế không phải lúc nào cũng vậy.</p>
+<p>Có những account hoặc record được xử lý riêng có chủ đích. Nếu hệ thống không có khái niệm exception, mỗi lần chạy automation sẽ tiếp tục phát hiện cùng một “lỗi” và cố sửa nó.</p>
+<p>Mình thích việc intentional exception trở thành một phần chính thức của rule: có lý do, có owner và có thể review lại. Không phải một thứ chỉ nằm trong trí nhớ của engineer.</p>
+
+<h2>Fail closed quan trọng hơn chạy hết</h2>
+<p>Khi automation có quyền sửa identity, mình không muốn philosophy của nó là “cố chạy càng nhiều càng tốt”. Mình muốn nó thiên về: <strong>không chắc thì dừng</strong>.</p>
+<p>Nếu một employee record map được nhiều account, thiếu identifier quan trọng hoặc trạng thái source không đủ rõ, safest action có thể là không làm gì cả.</p>
+<p>Một false negative — chưa sửa một record đáng ra có thể sửa — thường có thể review sau. Một false positive — sửa nhầm identity — có thể khó giải thích hơn nhiều.</p>
+<div class="lesson">Identity automation cần biết khi nào không được thay đổi.</div>
+
+<h2>AD chưa phải điểm cuối</h2>
+<p>Trong môi trường hybrid identity, thay đổi trong on-premises AD chưa chắc đã dừng ở đó. Một số thuộc tính tiếp tục được đồng bộ lên Entra ID, rồi application khác lại dùng Entra làm identity source.</p>
+<p>Vì vậy mình không chỉ hỏi: <strong>“AD có cập nhật đúng không?”</strong></p>
+<p>Mình hỏi tiếp: <strong>“Sau khi AD đúng, downstream identity có trở thành trạng thái mình mong muốn không?”</strong></p>
+<div class="flow"><span>HRIS</span><b>→</b><span>Detection</span><b>→</b><span>Controlled Change</span><b>→</b><span>AD</span><b>→</b><span>Entra ID</span><b>→</b><span>Final Verification</span></div>
+<p>Một change được xem là thành công chỉ vì PowerShell trả về exit code 0 là chưa đủ.</p>
+
+<h2>Audit trail không nên là thứ làm sau cùng</h2>
+<p>Khi automation bắt đầu thay đổi production identity, mình muốn trả lời được: process nào thực hiện thay đổi, before value là gì, after value là gì, dữ liệu mới đến từ đâu, rule nào quyết định record đủ điều kiện và sau thay đổi đã verify gì.</p>
+<p>Nếu những câu đó chỉ có thể trả lời bằng cách đọc lại source code thì audit trail chưa đủ tốt.</p>
+<p>Remediation nên tạo ra bằng chứng ngay trong flow: detected value, proposed value, action taken, result và validation.</p>
+
+<h2>Rollback phải được nghĩ trước khi mở Write</h2>
+<p>Với script read-only, rollback gần như không phải câu hỏi lớn. Với script thay Manager, Title hoặc Employee ID thì khác.</p>
+<p>Nếu change sai, mình cần biết giá trị trước đó. Nếu chạy hàng loạt, mình cần biết record nào đã thay đổi thành công trước khi job dừng. Nếu downstream sync đã chạy, rollback AD cũng cần được verify lại ở trạng thái cuối.</p>
+<p>Trước khi mở write permission, mình muốn remediation có ít nhất ba thứ: <strong>before value, after value và result</strong>.</p>
+
+<h2>Khi nào một rule đủ điều kiện để remediation?</h2>
+<p>Không phải toàn bộ hệ thống cần chuyển từ detect-only sang remediation. Quyết định nên nằm ở từng rule.</p>
+<p>Một attribute có mapping rõ, identifier đủ chắc, exception đã được hiểu và validation/rollback đầy đủ có thể được tự động sửa. Một attribute khác vẫn có thể tiếp tục detect-only lâu dài.</p>
+<p>Automation không cần phải là all-or-nothing.</p>
+<p>Với mình, thời điểm mở write không nằm ở việc script đã chạy được. Nó nằm ở việc mình đã hiểu đủ mismatch, có guardrail cho case không chắc chắn và biết cách kiểm chứng trạng thái cuối.</p>
+
+<h2>Điều mình giữ lại</h2>
+<p>Trước bài toán này, cụm từ <strong>Source of Truth</strong> nghe khá dứt khoát: có một hệ thống đúng, những hệ thống khác phải theo nó.</p>
+<p>Sau khi làm sâu hơn với identity, mình thấy còn một câu cần thêm vào phía sau:</p>
+<div class="decision-note"><strong>Source of Truth cho biết mình nên tin dữ liệu ở đâu. Nó không tự động quyết định hệ thống nào được quyền thay đổi production.</strong></div>
+<p>Khoảng cách giữa hai việc đó là nơi mình đặt detection, validation, exception handling, audit và rollback.</p>
+<p>Và với identity, khoảng cách đó đáng để giữ.</p>
+<p><strong>Automation tốt không chỉ biết phải sửa gì. Nó còn phải biết khi nào chưa nên sửa.</strong></p>
+
+<div class="article-signoff"><p>Ghi lại từ những trải nghiệm thực tế của mình trong quá trình làm Infrastructure — những câu chuyện vẫn còn tiếp tục.</p><a href="2026-09-07-static-website-to-internal-portal-sso">Đọc trước ← Từ một static website đến internal portal có SSO</a><br><a href="2026-08-25-least-privilege-bastion-access">Đọc tiếp → Least Privilege trong thực tế</a></div>
+</article></section></main>
+<footer><div class="wrap"><a href="/blog/" style="color:inherit;text-decoration:none">© 2026 Vo Thanh Sang • All rights reserved.</a></div></footer>
+<script src="/assets/image-lightbox.js" defer></script>
+</body></html>
