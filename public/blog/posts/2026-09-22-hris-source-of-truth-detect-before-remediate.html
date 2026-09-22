@@ -14,8 +14,8 @@
 <meta property="og:url" content="https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate">
 <meta property="og:site_name" content="Vo Thanh Sang">
 <meta property="og:locale" content="vi_VN">
-<meta property="og:image" content="https://sangvo.me/assets/blog/og-card.png">
-<meta property="og:image:alt" content="Engineering Notes by Vo Thanh Sang">
+<meta property="og:image" content="https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png">
+<meta property="og:image:alt" content="HRIS Source of Truth identity governance flow with Detect-only and Controlled Remediation">
 <meta property="article:published_time" content="2026-09-22T00:00:00+07:00">
 <meta property="article:modified_time" content="2026-09-22T00:00:00+07:00">
 <meta property="article:author" content="Vo Thanh Sang">
@@ -24,10 +24,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="HRIS là Source of Truth, nhưng chưa phải Write Authority">
 <meta name="twitter:description" content="Detect trước, validate từng rule và chỉ remediation khi đủ điều kiện.">
-<meta name="twitter:image" content="https://sangvo.me/assets/blog/og-card.png">
+<meta name="twitter:image" content="https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/style.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate"},"headline":"HRIS là Source of Truth, nhưng không có nghĩa là được phép sửa AD ngay","description":"Engineering Note về HRIS, Active Directory và Identity Governance: detect trước, validate từng rule và chỉ remediation khi đủ an toàn.","image":"https://sangvo.me/assets/blog/og-card.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["HRIS","Active Directory","Microsoft Entra ID","Identity Governance","Detect-only","Automation","Remediation"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate"},"headline":"HRIS là Source of Truth, nhưng không có nghĩa là được phép sửa AD ngay","description":"Engineering Note về HRIS, Active Directory và Identity Governance: detect trước, validate từng rule và chỉ remediation khi đủ an toàn.","image":"https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["HRIS","Active Directory","Microsoft Entra ID","Identity Governance","Detect-only","Automation","Remediation"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
 <style>
 .article>p:not(.subtitle),.article .article-signoff p{text-align:justify;text-justify:inter-word}
 .decision-note{margin:30px 0;padding:22px 24px;border-left:5px solid #173f8a;background:#f5f8fc;border-radius:0 14px 14px 0}
@@ -75,7 +75,7 @@
 <p>Trong detect-only mode, hệ thống có thể nói: HRIS đang nói A, AD đang nói B, hai bên không giống nhau. Nhưng nó chưa tự quyết định rằng AD phải trở thành A.</p>
 <p>Chính giai đoạn này giúp lộ ra những case mà một câu query đơn giản không nói được: account không map an toàn, một record là intentional exception, identifier chưa đủ chắc hoặc context business nằm ngoài thứ automation nhìn thấy.</p>
 
-<figure class="article-figure"><img src="/assets/blog/hris-source-of-truth-detect-remediate.svg?v=20260922" alt="Identity Governance từ HRIS Source of Truth qua middleware và reconciliation, tách thành Detect-only hoặc Controlled Remediation trước Active Directory và Entra ID"><figcaption>Detect-only và Controlled Remediation là hai outcome khác nhau. Không phải mọi mismatch đều phải đi đến write-back.</figcaption></figure>
+<figure class="article-figure"><img src="/assets/blog/hris-source-of-truth-detect-remediate.png?v=20260922b" alt="Identity Governance từ HRIS Source of Truth qua middleware và reconciliation, tách thành Detect-only hoặc Controlled Remediation trước Active Directory và Entra ID"><figcaption>Detect-only và Controlled Remediation là hai outcome khác nhau. Không phải mọi mismatch đều phải đi đến write-back.</figcaption></figure>
 
 <h2>Detect-only không phải trạng thái tạm</h2>
 <p>Một cách rất dễ hình dung automation là Detect → Review → Remediate. Nhưng flow đó không có nghĩa mọi rule cuối cùng đều phải đi tới remediation.</p>
