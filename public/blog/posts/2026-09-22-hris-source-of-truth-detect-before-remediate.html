@@ -3,31 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory | Vo Thanh Sang</title>
-<meta name="description" content="Khi HRIS và Active Directory không khớp nhau, vấn đề không chỉ là bên nào đúng mà là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.">
+<title>HRM đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory | Vo Thanh Sang</title>
+<meta name="description" content="Khi HRM và Active Directory không khớp nhau, vấn đề không chỉ là bên nào đúng mà là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.">
 <meta name="author" content="Vo Thanh Sang">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate">
-<meta property="og:title" content="HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory">
-<meta property="og:description" content="Khi HRIS và Active Directory không khớp nhau, vấn đề không chỉ là bên nào đúng mà là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.">
+<meta property="og:title" content="HRM đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory">
+<meta property="og:description" content="Khi HRM và Active Directory không khớp nhau, vấn đề không chỉ là bên nào đúng mà là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate">
 <meta property="og:site_name" content="Vo Thanh Sang">
 <meta property="og:locale" content="vi_VN">
 <meta property="og:image" content="https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png">
-<meta property="og:image:alt" content="HRIS Source of Truth identity governance flow with Detect-only and Controlled Remediation">
+<meta property="og:image:alt" content="HRM Source of Truth identity governance flow with Detect-only and Controlled Remediation">
 <meta property="article:published_time" content="2026-09-22T00:00:00+07:00">
 <meta property="article:modified_time" content="2026-09-22T00:00:00+07:00">
 <meta property="article:author" content="Vo Thanh Sang">
 <meta property="article:section" content="Identity & Microsoft">
-<meta property="article:tag" content="HRIS"><meta property="article:tag" content="Active Directory"><meta property="article:tag" content="Microsoft Entra ID"><meta property="article:tag" content="Identity Governance"><meta property="article:tag" content="Automation">
+<meta property="article:tag" content="HRM"><meta property="article:tag" content="Active Directory"><meta property="article:tag" content="Microsoft Entra ID"><meta property="article:tag" content="Identity Governance"><meta property="article:tag" content="Automation">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory">
+<meta name="twitter:title" content="HRM đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory">
 <meta name="twitter:description" content="Vấn đề không chỉ là bên nào đúng. Quan trọng hơn là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.">
 <meta name="twitter:image" content="https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/style.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate"},"headline":"HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory","description":"Khi HRIS và Active Directory không khớp nhau, vấn đề không chỉ là bên nào đúng mà là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.","image":"https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["HRIS","Active Directory","Microsoft Entra ID","Identity Governance","Detect-only","Automation","Remediation"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-hris-source-of-truth-detect-before-remediate"},"headline":"HRM đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory","description":"Khi HRM và Active Directory không khớp nhau, vấn đề không chỉ là bên nào đúng mà là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.","image":"https://sangvo.me/assets/blog/hris-source-of-truth-detect-remediate.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["HRM","Active Directory","Microsoft Entra ID","Identity Governance","Detect-only","Automation","Remediation"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
 <style>
 .article>p:not(.subtitle),.article .article-signoff p{text-align:justify;text-justify:inter-word}
 .decision-note{margin:30px 0;padding:22px 24px;border-left:5px solid #173f8a;background:#f5f8fc;border-radius:0 14px 14px 0}
@@ -42,41 +42,41 @@
 <nav><div class="wrap"><div class="brand"><a href="/"><img src="/assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="/#about">About</a><a href="/projects/">Case Studies</a><a href="/blog/">Engineering Notes</a><a href="/#career">Career Journey</a></div></div></nav>
 <main><section><article class="article">
 <div class="kicker">Engineering Note • Identity & Microsoft • 2026</div>
-<h1>HRIS đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory</h1>
-<p class="subtitle">Khi dữ liệu HRIS và Active Directory không khớp nhau, vấn đề không chỉ là xác định bên nào đúng. Quan trọng hơn là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.</p>
-<div class="article-tags"><span>HRIS</span><span>Active Directory</span><span>Entra ID</span><span>Identity Governance</span><span>Automation</span><span>Detect-only</span></div>
+<h1>HRM đúng, nhưng mình vẫn chưa cho phép nó sửa Active Directory</h1>
+<p class="subtitle">Khi dữ liệu HRM và Active Directory không khớp nhau, vấn đề không chỉ là xác định bên nào đúng. Quan trọng hơn là automation đã đủ đáng tin để được quyền thay đổi identity production hay chưa.</p>
+<div class="article-tags"><span>HRM</span><span>Active Directory</span><span>Entra ID</span><span>Identity Governance</span><span>Automation</span><span>Detect-only</span></div>
 <div class="article-author">By <a href="/#about">Vo Thanh Sang</a> · Senior Infrastructure Engineer</div>
 
 <p>Có một bài toán nhìn qua khá đơn giản.</p>
-<p>HRIS có thông tin nhân viên. Active Directory cũng có thông tin nhân viên. Một số application lại cần Manager, Job Title, Employee ID và các thuộc tính identity khác để hiển thị hoặc phân quyền đúng.</p>
-<p>Nếu HRIS là nguồn dữ liệu chính thức, cách tự nhiên nhất có vẻ là:</p>
-<div class="flow"><span>HRIS thay đổi</span><b>→</b><span>AD tự động thay đổi theo</span></div>
+<p>HRM có thông tin nhân viên. Active Directory cũng có thông tin nhân viên. Một số application lại cần Manager, Job Title, Employee ID và các thuộc tính identity khác để hiển thị hoặc phân quyền đúng.</p>
+<p>Nếu HRM là nguồn dữ liệu chính thức, cách tự nhiên nhất có vẻ là:</p>
+<div class="flow"><span>HRM thay đổi</span><b>→</b><span>AD tự động thay đổi theo</span></div>
 <p>Về mặt kỹ thuật, làm như vậy không khó.</p>
 <p>Nhưng mình không muốn bắt đầu ở đó.</p>
-<p>Câu hỏi đầu tiên không phải là <strong>“Làm sao sync HRIS sang AD?”</strong></p>
+<p>Câu hỏi đầu tiên không phải là <strong>“Làm sao sync HRM sang AD?”</strong></p>
 <div class="decision-note"><strong>Mình đã đủ chắc để cho dữ liệu từ một hệ thống tự động thay đổi identity production chưa?</strong></div>
 
 <h2>Source of Truth không đồng nghĩa với Write Authority</h2>
-<p>HRIS có thể là authoritative source cho Employee ID, Manager, Title, trạng thái nhân sự hoặc một số thuộc tính tổ chức. Khi hai hệ thống không khớp, đó là nơi mình quay lại để đối chiếu.</p>
+<p>HRM có thể là authoritative source cho Employee ID, Manager, Title, trạng thái nhân sự hoặc một số thuộc tính tổ chức. Khi hai hệ thống không khớp, đó là nơi mình quay lại để đối chiếu.</p>
 <p>Nhưng điều đó chưa tự động dẫn đến kết luận rằng một integration được phép viết trực tiếp vào Active Directory.</p>
 <p><strong>Source of Truth</strong> trả lời: dữ liệu nào được xem là đúng.</p>
 <p><strong>Write Authority</strong> trả lời: thành phần nào được phép thay đổi production identity.</p>
-<p>Nếu gộp hai câu hỏi thành một, architecture rất dễ đi thẳng từ HRIS sang AD write-back. Nhanh, gọn, nhưng cũng tạo ra một đường thay đổi khá mạnh. Một record sai ở source, một mapping sai hoặc một identity match nhầm có thể trở thành production change trước khi con người kịp nhìn thấy.</p>
+<p>Nếu gộp hai câu hỏi thành một, architecture rất dễ đi thẳng từ HRM sang AD write-back. Nhanh, gọn, nhưng cũng tạo ra một đường thay đổi khá mạnh. Một record sai ở source, một mapping sai hoặc một identity match nhầm có thể trở thành production change trước khi con người kịp nhìn thấy.</p>
 <div class="lesson">Source of Truth cho biết mình nên tin dữ liệu ở đâu. Nó không tự động cấp quyền Write.</div>
 
 <h2>Đầu tiên chỉ đọc</h2>
-<p>Luồng đầu tiên mình thích là một chiều: <strong>HRIS → Middleware → Consumer</strong>. Middleware đọc dữ liệu cần thiết từ HRIS, normalize và transform, nhưng không thay đổi ngược về HRIS. Consumer cũng không trở thành một nơi khác để business sửa dữ liệu nhân sự.</p>
+<p>Luồng đầu tiên mình thích là một chiều: <strong>HRM → Middleware → Consumer</strong>. Middleware đọc dữ liệu cần thiết từ HRM, normalize và transform, nhưng không thay đổi ngược về HRM. Consumer cũng không trở thành một nơi khác để business sửa dữ liệu nhân sự.</p>
 <p>HR vẫn sở hữu dữ liệu nhân sự. Integration chỉ đọc và đối chiếu. Active Directory chưa bị thay đổi chỉ vì hệ thống phát hiện ra một difference.</p>
 <p>Ở bước này, mismatch vẫn chỉ là một <strong>observation</strong>. Nó chưa phải là một <strong>change</strong>.</p>
 
 <h2>Detect trước, Remediate sau</h2>
-<p>Khi bắt đầu so HRIS với AD, sẽ xuất hiện những trường hợp như Manager khác nhau, Title chưa cập nhật, Employee ID thiếu hoặc một identity không map được chắc chắn với employee record.</p>
+<p>Khi bắt đầu so HRM với AD, sẽ xuất hiện những trường hợp như Manager khác nhau, Title chưa cập nhật, Employee ID thiếu hoặc một identity không map được chắc chắn với employee record.</p>
 <p>Nếu automation ngay lập tức sửa mọi difference, mình sẽ mất đi một giai đoạn rất có giá trị: giai đoạn nhìn xem rule của mình có thật sự đúng không.</p>
 <div class="flow"><span>Detect</span><b>→</b><span>Review</span><b>→</b><span>Remediate khi đủ điều kiện</span></div>
-<p>Trong detect-only mode, hệ thống có thể nói: HRIS đang nói A, AD đang nói B, hai bên không giống nhau. Nhưng nó chưa tự quyết định rằng AD phải trở thành A.</p>
+<p>Trong detect-only mode, hệ thống có thể nói: HRM đang nói A, AD đang nói B, hai bên không giống nhau. Nhưng nó chưa tự quyết định rằng AD phải trở thành A.</p>
 <p>Chính giai đoạn này giúp lộ ra những case mà một câu query đơn giản không nói được: account không map an toàn, một record là intentional exception, identifier chưa đủ chắc hoặc context business nằm ngoài thứ automation nhìn thấy.</p>
 
-<figure class="article-figure"><img src="/assets/blog/hris-source-of-truth-detect-remediate.png?v=20260922b" alt="Identity Governance từ HRIS Source of Truth qua middleware và reconciliation, tách thành Detect-only hoặc Controlled Remediation trước Active Directory và Entra ID"><figcaption>Detect-only và Controlled Remediation là hai outcome khác nhau. Không phải mọi mismatch đều phải đi đến write-back.</figcaption></figure>
+<figure class="article-figure"><img src="/assets/blog/hris-source-of-truth-detect-remediate.png?v=20260922b" alt="Identity Governance từ HRM Source of Truth qua middleware và reconciliation, tách thành Detect-only hoặc Controlled Remediation trước Active Directory và Entra ID"><figcaption>Detect-only và Controlled Remediation là hai outcome khác nhau. Không phải mọi mismatch đều phải đi đến write-back.</figcaption></figure>
 
 <h2>Detect-only không phải trạng thái tạm</h2>
 <p>Một cách rất dễ hình dung automation là Detect → Review → Remediate. Nhưng flow đó không có nghĩa mọi rule cuối cùng đều phải đi tới remediation.</p>
@@ -110,7 +110,7 @@
 <p>Trong môi trường hybrid identity, thay đổi trong on-premises AD chưa chắc đã dừng ở đó. Một số thuộc tính tiếp tục được đồng bộ lên Entra ID, rồi application khác lại dùng Entra làm identity source.</p>
 <p>Vì vậy mình không chỉ hỏi: <strong>“AD có cập nhật đúng không?”</strong></p>
 <p>Mình hỏi tiếp: <strong>“Sau khi AD đúng, downstream identity có trở thành trạng thái mình mong muốn không?”</strong></p>
-<div class="flow"><span>HRIS</span><b>→</b><span>Detection</span><b>→</b><span>Controlled Change</span><b>→</b><span>AD</span><b>→</b><span>Entra ID</span><b>→</b><span>Final Verification</span></div>
+<div class="flow"><span>HRM</span><b>→</b><span>Detection</span><b>→</b><span>Controlled Change</span><b>→</b><span>AD</span><b>→</b><span>Entra ID</span><b>→</b><span>Final Verification</span></div>
 <p>Một change được xem là thành công chỉ vì PowerShell trả về exit code 0 là chưa đủ.</p>
 
 <h2>Audit trail không nên là thứ làm sau cùng</h2>
