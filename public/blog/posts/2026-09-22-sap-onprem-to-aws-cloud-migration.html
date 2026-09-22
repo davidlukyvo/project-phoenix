@@ -14,8 +14,8 @@
 <meta property="og:url" content="https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration">
 <meta property="og:site_name" content="Vo Thanh Sang">
 <meta property="og:locale" content="vi_VN">
-<meta property="og:image" content="https://sangvo.me/assets/blog/og-card.png">
-<meta property="og:image:alt" content="Vo Thanh Sang Engineering Notes">
+<meta property="og:image" content="https://sangvo.me/assets/blog/sap_migration_on_prem_to_aws.png">
+<meta property="og:image:alt" content="SAP migration from On-Prem to AWS architecture and Infrastructure Network responsibilities">
 <meta property="article:published_time" content="2026-09-22T00:00:00+07:00">
 <meta property="article:modified_time" content="2026-09-22T00:00:00+07:00">
 <meta property="article:author" content="Vo Thanh Sang">
@@ -24,10 +24,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud">
 <meta name="twitter:description" content="Một project 2023 nhìn từ phía Infra/Network: dependency, connectivity, security boundary, validation và cutover.">
-<meta name="twitter:image" content="https://sangvo.me/assets/blog/og-card.png">
+<meta name="twitter:image" content="https://sangvo.me/assets/blog/sap_migration_on_prem_to_aws.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/style.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration"},"headline":"Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud","description":"Ghi chép từ một project 2023 đưa hệ thống SAP từ On-Prem lên AWS: vai trò Infra/Network, dependency, security boundary, service validation và bài học sau migration.","image":"https://sangvo.me/assets/blog/og-card.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["SAP","AWS","Cloud Migration","Enterprise Infrastructure","Network","EKS","RDS","Disaster Recovery"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration"},"headline":"Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud","description":"Ghi chép từ một project 2023 đưa hệ thống SAP từ On-Prem lên AWS: vai trò Infra/Network, dependency, security boundary, service validation và bài học sau migration.","image":"https://sangvo.me/assets/blog/sap_migration_on_prem_to_aws.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["SAP","AWS","Cloud Migration","Enterprise Infrastructure","Network","EKS","RDS","Disaster Recovery"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
 <style>
 .article>p:not(.subtitle),.article .article-signoff p{text-align:justify;text-justify:inter-word}
 .context-note,.lesson{margin:30px 0;padding:20px 22px;border-radius:12px}
@@ -35,8 +35,8 @@
 .lesson{font-size:1.04rem;font-weight:700;color:#102847;border-top:1px solid #d9e1eb;border-bottom:1px solid #d9e1eb;border-radius:0}
 .flow{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:22px 0}.flow span{padding:9px 12px;border:1px solid #dce5ef;border-radius:999px;background:#f8fafc;font-weight:750;color:#344054}.flow b{color:#2563eb}
 .role-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:24px 0 34px}.role-card{border:1px solid #dce5ef;border-radius:12px;padding:18px;background:#fff}.role-card h3{font-size:1rem;margin:0 0 10px}.role-card p{margin:0;color:#566579;line-height:1.6;text-align:left!important}
-.article-tags{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 14px}.article-tags span{display:inline-flex;padding:7px 10px;border-radius:999px;background:#f3f6fa;border:1px solid #dce5ef;color:#344054;font-size:.85rem;font-weight:700}.article-author{margin:0 0 30px;color:#667085;font-size:.92rem}.article-author a{font-weight:700}
-@media(max-width:820px){.article>p:not(.subtitle),.article .article-signoff p{text-align:left}.role-grid{grid-template-columns:1fr}}
+.article-tags{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 14px}.article-tags span{display:inline-flex;padding:7px 10px;border-radius:999px;background:#f3f6fa;border:1px solid #dce5ef;color:#344054;font-size:.85rem;font-weight:700}.article-author{margin:0 0 30px;color:#667085;font-size:.92rem}.article-author a{font-weight:700}.article figure.article-figure{display:block;width:100%;max-width:100%;margin:32px 0 40px;padding:0}.article figure.article-figure img{display:block;width:100%;max-width:100%;height:auto;margin:0;border-radius:14px;box-shadow:0 10px 28px rgba(24,48,86,.08);background:#fff;cursor:zoom-in}.article figure.article-figure figcaption{display:block;width:100%;margin:10px 0 0;padding:0 10px;text-align:center;color:#66788a;font-size:.9rem;line-height:1.55}
+@media(max-width:820px){.article>p:not(.subtitle),.article .article-signoff p{text-align:left}.role-grid{grid-template-columns:1fr}.article figure.article-figure figcaption{text-align:left}}
 </style>
 </head>
 <body>
@@ -54,6 +54,11 @@
 <p>Nó nằm ở tất cả những thứ đang nối với hệ thống trước khi mũi tên đó được vẽ: network, DNS, firewall, database, middleware, access, monitoring và những dependency mà đôi khi chỉ lộ ra khi một service không còn đi theo đường cũ.</p>
 <div class="context-note"><strong>Cloud Migration không kết thúc khi resource đã xuất hiện trên AWS. Với mình, nó chỉ kết thúc khi service phía sau resource đó được kiểm chứng.</strong></div>
 
+<figure class="article-figure">
+  <img src="/assets/blog/sap_migration_on_prem_to_aws.png?v=20260922" alt="Sơ đồ migration SAP từ môi trường On-Prem qua kết nối hybrid lên AWS, với lớp Infrastructure và Network chịu trách nhiệm connectivity, security, validation, cutover và rollback">
+  <figcaption>Nhìn migration theo service path: On-Prem, kết nối hybrid, AWS platform và phần trách nhiệm của Infrastructure/Network xuyên suốt quá trình chuyển đổi.</figcaption>
+</figure>
+
 <h2>Vai trò của mình trong project</h2>
 <p>Đây là project có đối tác triển khai. Vì vậy mình không muốn kể lại theo cách làm như thể mình tự tay build toàn bộ EKS, Jenkins, RDS hay Redis.</p>
 <p>Vendor phụ trách phần cloud platform và application stack. Phía mình phụ trách Infrastructure/Network, phối hợp những phần liên quan đến connectivity, access path, security boundary, dependency, cutover và validation.</p>
@@ -66,6 +71,11 @@
 
 <p>Ranh giới trách nhiệm này khá quan trọng. Vendor có thể nói resource đã tạo xong. Infra có thể nói network đã thông. App team có thể nói process đã chạy.</p>
 <p>Nhưng business chỉ nhìn một kết quả: <strong>SAP có sử dụng được hay không.</strong></p>
+
+<figure class="article-figure">
+  <img src="/assets/blog/sap_migration_roles_to_business_readiness.png?v=20260922" alt="Phân vai trong SAP migration giữa Vendor Cloud Platform, Infrastructure Network và Application Team để cùng xác nhận business service sẵn sàng">
+  <figcaption>Resource delivered, connectivity validated và application verified là ba lớp khác nhau — chỉ khi ghép lại mới có thể nói business service đã sẵn sàng.</figcaption>
+</figure>
 
 <h2>Cloud Migration không bắt đầu ở AWS Console</h2>
 <p>Trước khi nói tới EKS hay RDS, mình quan tâm tới dependency.</p>
@@ -124,6 +134,11 @@
 <p><strong>Sau cutover:</strong> user validation, performance, monitoring, backup, security review và theo dõi xem còn dependency nào đang quay về On-Prem.</p>
 <p>Và chỉ sau giai đoạn cuối mình mới thấy có cơ sở để trả lời câu hỏi:</p>
 <div class="context-note"><strong>Khi nào môi trường On-Prem cũ thực sự không còn cần thiết nữa?</strong></div>
+
+<figure class="article-figure">
+  <img src="/assets/blog/sap_cutover_flow_on_prem_to_aws.png?v=20260922" alt="Flow kiểm tra SAP migration trước cutover, trong cutover và sau cutover từ On-Prem sang AWS">
+  <figcaption>Cutover không phải một khoảnh khắc đơn lẻ. Dependency, rollback, validation, monitoring và remaining On-Prem dependency đều cần được kiểm tra trước khi đóng migration.</figcaption>
+</figure>
 
 <h2>Nếu nhìn lại project 2023 hôm nay</h2>
 <p>Mình không muốn dùng tiêu chuẩn của vài năm sau để nói rằng implementation thời điểm đó “sai”. AWS, Kubernetes và security practice thay đổi khá nhanh.</p>
