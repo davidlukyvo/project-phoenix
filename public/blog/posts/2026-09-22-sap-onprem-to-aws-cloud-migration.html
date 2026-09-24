@@ -3,31 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Move SAP từ On-Prem lên AWS | Cloud Migration | Vo Thanh Sang</title>
-<meta name="description" content="Ghi chép từ một project 2023 đưa hệ thống SAP từ On-Prem lên AWS: vai trò Infra/Network, dependency, security boundary, service validation và bài học sau migration.">
+<title>Move SAP HANA từ On-Prem lên AWS | Cloud Migration | Vo Thanh Sang</title>
+<meta name="description" content="Ghi chép từ một project 2023 đưa hệ thống SAP HANA từ On-Prem lên AWS: vai trò Infra/Network, dependency, security boundary, service validation và bài học sau migration.">
 <meta name="author" content="Vo Thanh Sang">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration">
-<meta property="og:title" content="Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud">
+<meta property="og:title" content="Move SAP HANA từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud">
 <meta property="og:description" content="Vendor có thể dựng cloud resource. Infra vẫn phải hiểu dependency, network path, security boundary và cách chứng minh service thực sự hoạt động sau migration.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration">
 <meta property="og:site_name" content="Vo Thanh Sang">
 <meta property="og:locale" content="vi_VN">
 <meta property="og:image" content="https://sangvo.me/assets/blog/sap_migration_on_prem_to_aws.png">
-<meta property="og:image:alt" content="SAP migration from On-Prem to AWS architecture and Infrastructure Network responsibilities">
+<meta property="og:image:alt" content="SAP HANA migration from On-Prem to AWS architecture and Infrastructure Network responsibilities">
 <meta property="article:published_time" content="2026-09-22T00:00:00+07:00">
 <meta property="article:modified_time" content="2026-09-22T00:00:00+07:00">
 <meta property="article:author" content="Vo Thanh Sang">
 <meta property="article:section" content="Migration & Change">
-<meta property="article:tag" content="SAP"><meta property="article:tag" content="AWS"><meta property="article:tag" content="Cloud Migration"><meta property="article:tag" content="Infrastructure"><meta property="article:tag" content="Network">
+<meta property="article:tag" content="SAP HANA"><meta property="article:tag" content="AWS"><meta property="article:tag" content="Cloud Migration"><meta property="article:tag" content="Infrastructure"><meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud">
+<meta name="twitter:title" content="Move SAP HANA từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud">
 <meta name="twitter:description" content="Một project 2023 nhìn từ phía Infra/Network: dependency, connectivity, security boundary, validation và cutover.">
 <meta name="twitter:image" content="https://sangvo.me/assets/blog/sap_migration_on_prem_to_aws.png">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/style.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration"},"headline":"Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud","description":"Ghi chép từ một project 2023 đưa hệ thống SAP từ On-Prem lên AWS: vai trò Infra/Network, dependency, security boundary, service validation và bài học sau migration.","image":"https://sangvo.me/assets/blog/sap_migration_on_prem_to_aws.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["SAP","AWS","Cloud Migration","Enterprise Infrastructure","Network","EKS","RDS","Disaster Recovery"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration#article","mainEntityOfPage":{"@type":"WebPage","@id":"https://sangvo.me/blog/posts/2026-09-22-sap-onprem-to-aws-cloud-migration"},"headline":"Move SAP HANA từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud","description":"Ghi chép từ một project 2023 đưa hệ thống SAP HANA từ On-Prem lên AWS: vai trò Infra/Network, dependency, security boundary, service validation và bài học sau migration.","image":"https://sangvo.me/assets/blog/sap_migration_on_prem_to_aws.png","datePublished":"2026-09-22T00:00:00+07:00","dateModified":"2026-09-22T00:00:00+07:00","inLanguage":"vi-VN","author":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"publisher":{"@type":"Person","@id":"https://sangvo.me/#person","name":"Vo Thanh Sang","url":"https://sangvo.me/"},"keywords":["SAP HANA","AWS","Cloud Migration","Enterprise Infrastructure","Network","EKS","RDS","Disaster Recovery"],"isPartOf":{"@id":"https://sangvo.me/#website"}}</script>
 <style>
 .article>p:not(.subtitle),.article .article-signoff p{text-align:justify;text-justify:inter-word}
 .context-note,.lesson{margin:30px 0;padding:20px 22px;border-radius:12px}
@@ -43,9 +43,9 @@
 <nav><div class="wrap"><div class="brand"><a href="/"><img src="/assets/favicon.svg" alt="SV logo"><span>VO THANH SANG</span></a></div><div class="links"><a href="/#about">About</a><a href="/projects/">Case Studies</a><a href="/blog/">Engineering Notes</a><a href="/#career">Career Journey</a></div></div></nav>
 <main><section><article class="article">
 <div class="kicker">Field Notes • AWS / Migration • Project 2023</div>
-<h1>Move SAP từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud</h1>
-<p class="subtitle">Năm 2023, mình tham gia một project đưa toàn bộ hệ thống SAP từ hạ tầng On-Prem lên AWS cùng đối tác triển khai. Vendor phụ trách phần cloud platform và application stack; mình phụ trách phía Infrastructure/Network — connectivity, security boundary, dependency và validation để hệ thống sau migration thực sự vận hành được.</p>
-<div class="article-tags"><span>SAP</span><span>AWS</span><span>Cloud Migration</span><span>Infrastructure</span><span>Network</span><span>Validation</span></div>
+<h1>Move SAP HANA từ On-Prem lên AWS: khi Cloud Migration không chỉ là chuyện của Cloud</h1>
+<p class="subtitle">Năm 2023, mình tham gia một project đưa toàn bộ hệ thống SAP HANA từ hạ tầng On-Prem lên AWS cùng đối tác triển khai. Vendor phụ trách phần cloud platform và application stack; mình phụ trách phía Infrastructure/Network — connectivity, security boundary, dependency và validation để hệ thống sau migration thực sự vận hành được.</p>
+<div class="article-tags"><span>SAP HANA</span><span>AWS</span><span>Cloud Migration</span><span>Infrastructure</span><span>Network</span><span>Validation</span></div>
 <div class="article-author">By <a href="/#about">Vo Thanh Sang</a> · Senior Infrastructure Engineer</div>
 
 <p>Có những project nhìn trên sơ đồ khá đơn giản.</p>
@@ -55,7 +55,7 @@
 <div class="context-note"><strong>Cloud Migration không kết thúc khi resource đã xuất hiện trên AWS. Với mình, nó chỉ kết thúc khi service phía sau resource đó được kiểm chứng.</strong></div>
 
 <figure class="article-figure">
-  <img src="/assets/blog/sap_migration_on_prem_to_aws.png?v=20260922" alt="Sơ đồ migration SAP từ môi trường On-Prem qua kết nối hybrid lên AWS, với lớp Infrastructure và Network chịu trách nhiệm connectivity, security, validation, cutover và rollback">
+  <img src="/assets/blog/sap_migration_on_prem_to_aws.png?v=20260922" alt="Sơ đồ migration SAP HANA từ môi trường On-Prem qua kết nối hybrid lên AWS, với lớp Infrastructure và Network chịu trách nhiệm connectivity, security, validation, cutover và rollback">
   <figcaption>Nhìn migration theo service path: On-Prem, kết nối hybrid, AWS platform và phần trách nhiệm của Infrastructure/Network xuyên suốt quá trình chuyển đổi.</figcaption>
 </figure>
 
@@ -66,14 +66,14 @@
 <div class="role-grid">
   <div class="role-card"><h3>Vendor / Cloud Platform</h3><p>AWS resource, EKS, application deployment, Jenkins, RDS, Redis, S3, CloudWatch và các bước triển khai theo scope.</p></div>
   <div class="role-card"><h3>Infrastructure / Network</h3><p>Connectivity, routing path, firewall/security boundary, DNS, access, dependency, cutover readiness và service validation.</p></div>
-  <div class="role-card"><h3>Application Team</h3><p>Application configuration, endpoint, functional validation và xác nhận các service SAP liên quan hoạt động đúng sau migration.</p></div>
+  <div class="role-card"><h3>Application Team</h3><p>Application configuration, endpoint, functional validation và xác nhận các service SAP HANA liên quan hoạt động đúng sau migration.</p></div>
 </div>
 
 <p>Ranh giới trách nhiệm này khá quan trọng. Vendor có thể nói resource đã tạo xong. Infra có thể nói network đã thông. App team có thể nói process đã chạy.</p>
-<p>Nhưng business chỉ nhìn một kết quả: <strong>SAP có sử dụng được hay không.</strong></p>
+<p>Nhưng business chỉ nhìn một kết quả: <strong>SAP HANA có sử dụng được hay không.</strong></p>
 
 <figure class="article-figure">
-  <img src="/assets/blog/sap_migration_roles_to_business_readiness.png?v=20260922" alt="Phân vai trong SAP migration giữa Vendor Cloud Platform, Infrastructure Network và Application Team để cùng xác nhận business service sẵn sàng">
+  <img src="/assets/blog/sap_migration_roles_to_business_readiness.png?v=20260922" alt="Phân vai trong SAP HANA migration giữa Vendor Cloud Platform, Infrastructure Network và Application Team để cùng xác nhận business service sẵn sàng">
   <figcaption>Resource delivered, connectivity validated và application verified là ba lớp khác nhau — chỉ khi ghép lại mới có thể nói business service đã sẵn sàng.</figcaption>
 </figure>
 
@@ -90,7 +90,7 @@
 <p>Nếu nhiều private subnet vẫn phụ thuộc vào cùng một egress path, nếu database chỉ có một active instance, hoặc một middleware duy nhất vẫn đứng giữa application và dependency khác, thì việc đếm subnet chưa đủ để kết luận về availability.</p>
 <div class="lesson">Redundancy phải nhìn theo đường đi của service, không chỉ đếm số lượng subnet hay node.</div>
 
-<h2>EKS Active chưa có nghĩa SAP đã sẵn sàng</h2>
+<h2>EKS Active chưa có nghĩa SAP HANA đã sẵn sàng</h2>
 <p>Phần EKS trong project được triển khai bằng <code>eksctl</code>, có worker node, namespace, EBS CSI và AWS Load Balancer Controller. Front-end, back-end và Jenkins được triển khai lên cluster; ALB và target group được dùng để đưa traffic tới workload.</p>
 <p>Nhưng mình không muốn dừng validation ở trạng thái <code>ACTIVE</code>, <code>Ready</code> hay <code>Running</code>.</p>
 <p>Pod chạy chưa chắc application đọc được database. ALB tồn tại chưa chắc target healthy. Target healthy chưa chắc user thực hiện được transaction thật.</p>
@@ -115,11 +115,11 @@
 <p>Nó là việc phải tách được quyền của human administrator, automation và application workload. Nếu một pipeline chỉ chạy được sau khi role phía dưới được mở rất rộng, migration có thể thành công nhưng steady-state security lại trở thành việc phải xử lý sau go-live.</p>
 <p>Đó là lý do mình xem access review là một phần của handover, không phải một việc hoàn toàn tách khỏi migration.</p>
 
-<h2>Restore database chưa phải service recovery</h2>
-<p>RDS PostgreSQL được restore từ snapshot và đặt private, không public trực tiếp ra Internet. Redis cũng được phục hồi từ backup trong S3.</p>
-<p>Nhưng với application, trạng thái <code>Available</code> của database không phải kết luận cuối cùng.</p>
-<p>Mình vẫn cần nhìn tiếp: application resolve đúng endpoint chưa, credential có đúng không, connection từ application tới data service có thông không, data có đủ mới cho cutover không, và sau khi đổi môi trường thì monitoring/backup có quay lại trạng thái bình thường không.</p>
-<p>Infrastructure nói “database đã lên” và application nói “SAP chưa chạy” hoàn toàn có thể cùng đúng — vì hai bên đang đo hai layer khác nhau.</p>
+<h2>Database lên chưa có nghĩa SAP HANA đã sẵn sàng</h2>
+<p>Trong scope cloud, tài liệu triển khai có các data service như RDS PostgreSQL và Redis phục vụ những thành phần ứng dụng liên quan. Mình không xem trạng thái của một resource data layer là bằng chứng rằng toàn bộ SAP HANA đã sẵn sàng.</p>
+<p>Trạng thái <code>Available</code> của database chỉ là một tín hiệu.</p>
+<p>Mình vẫn cần nhìn tiếp: application resolve đúng endpoint chưa, credential có đúng không, connection tới data service có thông không, data có đủ mới cho cutover không, và sau khi đổi môi trường thì monitoring/backup có quay lại trạng thái bình thường không.</p>
+<p>Infrastructure nói “database đã lên” và application nói “SAP HANA chưa chạy” hoàn toàn có thể cùng đúng — vì hai bên đang đo hai layer khác nhau.</p>
 
 <h2>Configuration cho migration chưa chắc phù hợp với steady state</h2>
 <p>Một số lựa chọn trong giai đoạn build hoặc test có thể hợp lý để rút ngắn thời gian triển khai: quyền rộng hơn tạm thời, log giữ lâu để troubleshoot, một số HA/backup control chưa bật ngay, hoặc endpoint được cập nhật thủ công.</p>
@@ -136,7 +136,7 @@
 <div class="context-note"><strong>Khi nào môi trường On-Prem cũ thực sự không còn cần thiết nữa?</strong></div>
 
 <figure class="article-figure">
-  <img src="/assets/blog/sap_cutover_flow_on_prem_to_aws.png?v=20260922" alt="Flow kiểm tra SAP migration trước cutover, trong cutover và sau cutover từ On-Prem sang AWS">
+  <img src="/assets/blog/sap_cutover_flow_on_prem_to_aws.png?v=20260922" alt="Flow kiểm tra SAP HANA migration trước cutover, trong cutover và sau cutover từ On-Prem sang AWS">
   <figcaption>Cutover không phải một khoảnh khắc đơn lẻ. Dependency, rollback, validation, monitoring và remaining On-Prem dependency đều cần được kiểm tra trước khi đóng migration.</figcaption>
 </figure>
 
